@@ -17,6 +17,8 @@ ENV/
 .venv/
 *.egg-info/
 
+# mirgraitons
+migrations/
 # IDE-specific Files (VS Code, PyCharm, etc.)
 .vscode/
 .idea/
