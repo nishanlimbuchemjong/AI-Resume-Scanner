@@ -1,0 +1,53 @@
+# Python Bytecode Files
+__pycache__/
+*.pyc
+*.pyo
+
+# Flask
+instance/
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Virtual Environment (if using virtualenv or venv)
+venv/
+env/
+ENV/
+.venv/
+*.egg-info/
+
+# IDE-specific Files (VS Code, PyCharm, etc.)
+.vscode/
+.idea/
+
+# Operating System Specific Files (Windows, macOS)
+.DS_Store
+Thumbs.db
+
+# Dependency Lock Files (if not using them)
+Pipfile.lock
+
+# Jupyter Notebooks Checkpoints
+.ipynb_checkpoints/
+
+# Logs and Temporary Files
+*.log
+*.bak
+*.swp
+*.swo
+
+# .env or config files
+.env
+config.py
+
+# Docker files (if you're using Docker)
+.docker/
+docker-compose.yml
+
+# PostgreSQL files (if storing locally)
+*.sql
+
+# Other sensitive or unnecessary files
+*.pkl
+*.json
