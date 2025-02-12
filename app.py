@@ -61,6 +61,13 @@ def login():
     
     return render_template('login.html')
 
+# Logout Route
+@app.route('/logout')
+def logout():
+    session.pop('company_id', None)
+    flash("Logged out successfully!", "success")
+    return redirect(url_for('login'))
+
 # Company Dashboard
 @app.route('/dashboard')
 def dashboard():
