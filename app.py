@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
@@ -14,8 +14,8 @@ app.config.from_object(Config)
 db.init_app(app)
 
 @app.route('/')
-def index():
-    return 'Welcome to AI Resume Scanner!'
+def landing_page():
+    return render_template('landing_page.html')
 
 # SignUp Route
 @app.route('/signup', methods=['GET', 'POST'])
@@ -40,6 +40,23 @@ def signup():
     
     return render_template('signup.html')
 
+# Login Route
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        company = Company.query.filter_by(email=email).first()
+        
+        if company and check_password_hash(company.password, password):
+            session['company_id'] = company.company_id
+            flash("Login successful!", "success")
+            return redirect(url_for('post_job'))
+        else:
+            flash("Invalid credentials!", "danger")
+            return redirect(url_for('login'))
+    
+    return render_template('login.html')
 
 
 if __name__ == "__main__":

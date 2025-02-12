@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Signup - AI Resume Scanner{% endblock %}
+
+{% block content %}
+    <section class="hero bg-primary text-white text-center py-5">
+        <div class="container">
+            <h1 class="display-4">AI Resume Scanner</h1>
+            <p class="lead">Smart, fast, and accurate job matching system for your resumes.</p>
+            <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <h3>AI-Powered Matching</h3>
+                    <p>Our AI analyzes resumes and job descriptions to provide accurate matching scores.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3>Fast and Efficient</h3>
+                    <p>Our system processes resumes quickly and efficiently, saving time for recruiters and job seekers.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3>Easy to Use</h3>
+                    <p>Our platform is user-friendly, ensuring a seamless experience for companies and applicants alike.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">How It Works</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Step 1: Register</h4>
+                    <p>Create an account and set up your company profile to get started with job postings.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Step 2: Post Jobs</h4>
+                    <p>Easily post job openings with required skills, qualifications, and job descriptions.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Step 3: Match Resumes</h4>
+                    <p>Receive resumes from applicants and use our AI to match them to your job posting accurately.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Get Started Section -->
+    <section class="cta py-5 text-white text-center">
+        <div class="container">
+            <h2 class="display-4 mb-3">Ready to find the perfect match?</h2>
+            <p class="lead mb-4">Start using AI Resume Scanner today to streamline your hiring process.</p>
+            <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg">Join Now</a>
+        </div>
+    </section>
+{% endblock %}
