@@ -7,8 +7,11 @@ db = SQLAlchemy()
 
 # Enum for Job Post Status
 class JobPostStatus(enum.Enum):
-    active = "active"
-    inactive = "inactive"
+    active = "Active"
+    inactive = "In-Active"
+
+    def __str__(self):
+        return self.value
 
 # Company Model
 class Company(db.Model):
@@ -34,6 +37,7 @@ class JobPost(db.Model):
     skills_required = db.Column(db.Text, nullable=False)
     experience_required = db.Column(db.String(100), nullable=False)
     education_required = db.Column(db.String(255), nullable=False)
+    job_type = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.TIMESTAMP, default=db.func.current_timestamp(), nullable=False)
     status = db.Column(Enum(JobPostStatus), default=JobPostStatus.active, nullable=False)
 
