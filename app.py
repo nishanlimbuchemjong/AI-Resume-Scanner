@@ -51,13 +51,24 @@ def login():
         if company and check_password_hash(company.password, password):
             session['company_id'] = company.company_id
             flash("Login successful!", "success")
-            return redirect(url_for('post_job'))
+            return redirect(url_for('dashboard'))
         else:
             flash("Invalid credentials!", "danger")
             return redirect(url_for('login'))
     
     return render_template('login.html')
 
+# Company Dashboard
+@app.route('/dashboard')
+def dashboard():
+    if 'company_id' not in session:
+        flash("Please log in first!", "danger")
+        return redirect(url_for('login'))
+
+    company_id = session['company_id']
+    company = Company.query.get(company_id)
+
+    return render_template('company_dashboard.html', company=company)
 
 if __name__ == "__main__":
     app.run(debug=True)
