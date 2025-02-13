@@ -3,8 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
+import os
 from config import Config
-from models import db, Company, JobPost, JobPostStatus
+from models import db, Company, JobPost, JobPostStatus, Resume
+from werkzeug.utils import secure_filename
+from drive_auth import upload_to_drive
 
 app = Flask(__name__)
 
@@ -18,7 +21,12 @@ migrate = Migrate(app, db)
 
 @app.route('/')
 def landing_page():
-    return render_template('landing_page.html')
+    return render_template('landing_page.html',)
+
+@app.route('/all-job-posts', methods=['GET'])
+def all_job_posts():
+    jobs = JobPost.query.all()
+    return render_template('all_posts.html', jobs=jobs)
 
 # SignUp Route
 @app.route('/signup', methods=['GET', 'POST'])
@@ -114,6 +122,73 @@ def post_job():
         return redirect(url_for('dashboard'))
     
     return render_template('post_job.html')
+
+# Apply for Job Route
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'pdf'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/apply/<int:job_id>', methods=['GET', 'POST'])
+def apply_for_job(job_id):
+    job = JobPost.query.get(job_id)
+    if not job:
+        flash("Job not found", "danger")
+        return redirect(url_for('all_job_posts'))  # Redirect to job posts if job is not found
+
+    if request.method == 'POST':
+        # Check if the resume file exists in the form
+        if 'resume' not in request.files:
+            flash('No file part', 'danger')
+            return redirect(request.url)
+
+        resume = request.files['resume']
+        applicant_name = request.form['applicant_name']
+        email = request.form['email']
+
+        if resume.filename == '':
+            flash('No selected file', 'danger')
+            return redirect(request.url)
+
+        if resume and allowed_file(resume.filename):
+            filename = secure_filename(resume.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+            # Ensure that the upload folder exists
+            if not os.path.exists(app.config['UPLOAD_FOLDER']):
+                os.makedirs(app.config['UPLOAD_FOLDER'])
+
+            resume.save(file_path)
+
+            # Upload to Google Drive
+            drive_link = upload_to_drive(file_path, filename)
+
+            # Save resume information to the database
+            new_resume = Resume(
+                job_id=job_id,
+                applicant_name=applicant_name,
+                email=email,
+                resume_file=drive_link,  # Store Google Drive link
+                extracted_text='',
+                skills_extracted='',
+                experience='',
+                education=''
+            )
+
+            db.session.add(new_resume)
+            db.session.commit()
+
+            flash('Resume submitted successfully!', 'success')
+            return redirect(url_for('all_job_posts'))  # Redirect to job posts after application
+
+        flash('Invalid file format. Only PDFs are allowed.', 'danger')
+        return redirect(request.url)
+
+    # This will handle the GET request and show the job application form
+    return render_template('apply_for_job.html', job=job)
 
 if __name__ == "__main__":
     app.run(debug=True)
