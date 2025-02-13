@@ -19,6 +19,9 @@ ENV/
 
 # mirgraitons
 migrations/
+
+# uploads
+uploads/
 # IDE-specific Files (VS Code, PyCharm, etc.)
 .vscode/
 .idea/
