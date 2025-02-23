@@ -3,31 +3,33 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
+from google.auth.transport.requests import Request
 
 # Define the scope for Google Drive API
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
 def authenticate_drive():
     creds = None
-    print("Checking for existing credentials...")
-    # Load existing credentials if available
+
+    # Remove existing token.json to start fresh
     if os.path.exists('token.json'):
-        print("Loading existing credentials...")
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        os.remove('token.json')
 
-    # If there are no valid credentials, authenticate
-    if not creds or not creds.valid:
-        print("No valid credentials, starting OAuth authentication...")
-        flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-        creds = flow.run_local_server(port=8082)
+    # Check if credentials.json exists
+    if not os.path.exists('credentials.json'):
+        raise FileNotFoundError("The 'credentials.json' file is missing.")
 
-        # Save the credentials for future use
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
+    # Initiate the flow to obtain credentials
+    flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+    flow.access_type = 'offline'  # Request a refresh token
+    flow.prompt = 'consent'       # Force consent screen to ensure refresh token is received
+    creds = flow.run_local_server(port=8082)
 
-    print("Authentication complete. Returning Drive service...")
+    # Save the credentials for future use
+    with open('token.json', 'w') as token:
+        token.write(creds.to_json())
+
     return build('drive', 'v3', credentials=creds)
-
 # Call the function to authenticate and create the drive service
 # authenticate_drive()
 
