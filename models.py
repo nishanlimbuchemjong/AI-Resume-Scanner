@@ -55,8 +55,8 @@ class Resume(db.Model):
     resume_file = db.Column(db.String(500), nullable=False)  # Google Drive link
     extracted_text = db.Column(db.Text, nullable=False)
     skills_extracted = db.Column(db.Text, nullable=False)
-    experience = db.Column(db.String(100), nullable=False)
-    education = db.Column(db.String(255), nullable=False)
+    experience = db.Column(db.Text, nullable=False)
+    education = db.Column(db.Text, nullable=False)
     submitted_at = db.Column(db.TIMESTAMP, default=db.func.current_timestamp(), nullable=False)
 
     # Relationship with resume_scores
