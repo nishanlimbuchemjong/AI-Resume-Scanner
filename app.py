@@ -10,6 +10,7 @@ from models import db, Company, JobPost, JobPostStatus, Resume
 from werkzeug.utils import secure_filename
 from drive_auth import upload_to_drive
 from pdf_extractor import extract_text_from_pdf, extract_skills, extract_experience, extract_education
+from database import get_connection
 
 app = Flask(__name__)
 
@@ -84,7 +85,7 @@ def dashboard():
     if 'company_id' not in session:
         flash("Please log in first!", "danger")
         return redirect(url_for('login'))
-
+    
     company_id = session['company_id']
     company = Company.query.get(company_id)
     jobs = JobPost.query.filter_by(company_id=session['company_id']).all()
@@ -124,6 +125,40 @@ def post_job():
         return redirect(url_for('dashboard'))
     
     return render_template('post_job.html')
+
+# View all applicants who have applied for a job on specific job post posted by company
+@app.route('/view_applicants/<int:job_id>')
+def view_applicants(job_id):
+    query = """
+    SELECT j.job_title, r.applicant_name, r.email, rs.matching_score, rs.rank, r.resume_file 
+    FROM resumes r
+    JOIN resume_scores rs ON rs.resume_id = r.resume_id
+    JOIN job_posts j ON rs.job_id = j.job_id
+    WHERE rs.job_id = %s
+    ORDER BY rs.rank ASC;
+    """
+    
+    conn = get_connection()  # Get a connection from your function
+    cursor = conn.cursor()
+    cursor.execute(query, (job_id,))
+    result = cursor.fetchall()
+
+    # Extract job title and applicants' data
+    job_title = result[0][0]
+
+    applicants = [
+        {
+            "name": row[1],
+            "email": row[2],
+            "score": row[3],
+            "rank": row[4],
+            "resume_link": row[5]
+        }
+        for row in result
+    ]
+
+    return render_template('view_applicants.html', applicants=applicants, job_id=job_id, job_title=job_title)
+
 
 # Apply for Job Route
 UPLOAD_FOLDER = 'uploads'
