@@ -1,30 +1,31 @@
 {% extends "dashboard_base.html" %}
 {% block content %}
-    <h2>Applicants for Job Post: {{ job_title }}</h2>
-    <table border="1">
+<br>
+    <h2>Applicants for Job Post: {{ job_title }}</h2><br>
+    <table class="table table-hover">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Score</th>
                 <th>Rank</th>
-                <th>Resume</th>
+                <th>Applicants Name</th>
+                <th>Email</th>
+                <th>Resume Link</th>
+                <th>Score</th>
             </tr>
         </thead>
         <tbody>
             {% for applicant in applicants %}
             <tr>
+                <td>{{ applicant.rank }}</td>
                 <td>{{ applicant.name }}</td>
                 <td>{{ applicant.email }}</td>
-                <td>{{ applicant.score|round(2) }}</td>
-                <td>{{ applicant.rank }}</td>
                 <td>
                     {% if applicant.resume_link %}
-                        <a href="{{ applicant.resume_link }}" target="_blank">View Resume</a>
+                    <a href="{{ applicant.resume_link }}" target="_blank">View Resume</a>
                     {% else %}
-                        No Resume Available
+                    No Resume Available
                     {% endif %}
                 </td>
+                <td>{{ applicant.score|round(2) }}</td>
             </tr>
             {% endfor %}
         </tbody>
