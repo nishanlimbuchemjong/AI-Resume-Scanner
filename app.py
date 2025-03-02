@@ -129,22 +129,31 @@ def post_job():
 # View all applicants who have applied for a job on specific job post posted by company
 @app.route('/view_applicants/<int:job_id>')
 def view_applicants(job_id):
+    # Get the page number from the query string (default to 1 if not provided)
+    page = request.args.get('page', 1, type=int)
+    
+    # Define the number of applicants to show per page
+    per_page = 10
+    offset = (page - 1) * per_page
+
+    # Query to fetch the job title and applicants' data with pagination
     query = """
-    SELECT j.job_title, r.applicant_name, r.email, rs.matching_score, rs.rank, r.resume_file 
+    SELECT j.job_title, r.applicant_name, r.email, rs.matching_score, rs.rank, r.resume_file
     FROM resumes r
     JOIN resume_scores rs ON rs.resume_id = r.resume_id
     JOIN job_posts j ON rs.job_id = j.job_id
     WHERE rs.job_id = %s
-    ORDER BY rs.rank ASC;
+    ORDER BY rs.rank ASC
+    LIMIT %s OFFSET %s;
     """
     
     conn = get_connection()  # Get a connection from your function
     cursor = conn.cursor()
-    cursor.execute(query, (job_id,))
+    cursor.execute(query, (job_id, per_page, offset))
     result = cursor.fetchall()
 
     # Extract job title and applicants' data
-    job_title = result[0][0]
+    job_title = result[0][0] if result else 'No Job Title'
 
     applicants = [
         {
@@ -156,9 +165,31 @@ def view_applicants(job_id):
         }
         for row in result
     ]
+    
+    # Count total applicants for pagination info
+    count_query = """
+    SELECT COUNT(*) FROM resumes r
+    JOIN resume_scores rs ON rs.resume_id = r.resume_id
+    WHERE rs.job_id = %s;
+    """
+    cursor.execute(count_query, (job_id,))
+    total_applicants = cursor.fetchone()[0]
+    total_pages = (total_applicants // per_page) + (1 if total_applicants % per_page > 0 else 0)
 
-    return render_template('view_applicants.html', applicants=applicants, job_id=job_id, job_title=job_title)
-
+    return render_template(
+        'view_applicants.html',
+        applicants=applicants,
+        job_id=job_id,
+        job_title=job_title,
+        pagination={
+            'page': page,
+            'total_pages': total_pages,
+            'has_prev': page > 1,
+            'has_next': page < total_pages,
+            'prev_num': page - 1,
+            'next_num': page + 1
+        }
+    )
 
 # Apply for Job Route
 UPLOAD_FOLDER = 'uploads'
