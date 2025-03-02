@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from similarity import calculate_similarity
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 import os
@@ -186,13 +187,23 @@ def apply_for_job(job_id):
             db.session.add(new_resume)
             db.session.commit()
 
-            flash('Resume submitted and extracted successfully!', 'success')
+            # **Call calculate_similarity() to update rankings**
+            calculate_similarity()
+
+            flash('Resume submitted and extracted successfully! Scores updated.', 'success')
             return redirect(url_for('all_job_posts'))
 
         flash('Invalid file format. Only PDFs are allowed.', 'danger')
         return redirect(request.url)
 
     return render_template('apply_for_job.html', job=job)
+
+@app.route('/calculate_scores', methods=['GET'])
+def calculate_scores():
+    calculate_similarity()
+    return jsonify({"message": "Matching scores calculated successfully!"})
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
