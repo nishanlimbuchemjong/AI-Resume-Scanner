@@ -30,4 +30,39 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Pagination Controls -->
+    <nav aria-label="Pagination">
+        <ul class="pagination d-flex justify-content-center">
+            {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('view_applicants', job_id=job_id, page=pagination.prev_num) }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; Previous</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+            
+            {% for page_num in range(1, pagination.total_pages + 1) %}
+                <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('view_applicants', job_id=job_id, page=page_num) }}">{{ page_num }}</a>
+                </li>
+            {% endfor %}
+            
+            {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('view_applicants', job_id=job_id, page=pagination.next_num) }}" aria-label="Next">
+                        <span aria-hidden="true">Next &raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
 {% endblock %}
