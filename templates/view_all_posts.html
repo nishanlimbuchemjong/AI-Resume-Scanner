@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h3>Job Details</h3>
+    {% if jobs %}
+        <div class="list-group">
+            {% for job in jobs %}
+                <div class="list-group-item">
+                    <h5>{{ job.job_title }}</h5>
+                    <p>{{ job.description }}</p>
+                    <small><strong>Skills Required:</strong> {{ job.skills_required }}</small><br>
+                    <small><strong>Experience:</strong> {{ job.experience_required }}</small><br>
+                    <small><strong>Education:</strong> {{ job.education_required }}</small><br>
+                    <small><strong>Job Type:</strong> {{ job.job_type }}</small><br>
+                    <small><strong>Status:</strong> {{ job.status }}</small><br>
+
+                    <!-- Redirect button to the apply page -->
+                    <a href="{{ url_for('apply_for_job', job_id=job.job_id) }}" class="btn btn-primary">Apply for this job</a>
+                    <br>
+                    <small class="text-muted">Posted on: {{ job.created_at }}</small>
+                </div>
+                <br>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No jobs posted yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
