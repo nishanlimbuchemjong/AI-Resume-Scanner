@@ -32,27 +32,69 @@ def all_job_posts():
     return render_template('all_posts.html', jobs=jobs)
 
 # SignUp Route
+UPLOAD_FOLDER = 'static/uploads/'  # Folder to store images
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Function to check allowed file extensions
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         company_name = request.form['company_name']
         email = request.form['email']
         password = request.form['password']
+        location = request.form['location']
+        
+        company_logo = request.files['company_logo']
+        logo_filename = 'static/uploads/logo.png'
+
+        if company_logo and allowed_file(company_logo.filename):
+            filename = secure_filename(company_logo.filename)
+            logo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            company_logo.save(logo_path)
+            logo_filename = os.path.join('static/uploads', filename) 
+
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         
-        existing_company = Company.query.filter_by(email=email).first()
-        if existing_company:
-            flash("Company already exists!", "danger")
-            return redirect(url_for('signup'))
-        
-        new_company = Company(company_name=company_name, email=email, password=hashed_password)
+        new_company = Company(
+            company_name=company_name,
+            email=email,
+            password=hashed_password,
+            location=location,
+            company_logo=logo_filename
+        )
         db.session.add(new_company)
         db.session.commit()
-        
-        flash("Signup successful! Please log in.", "success")
+
+        flash ("Company registered successfully!", "success")
         return redirect(url_for('login'))
     
     return render_template('signup.html')
+
+# @app.route('/signup', methods=['GET', 'POST'])
+# def signup():
+#     if request.method == 'POST':
+#         company_name = request.form['company_name']
+#         email = request.form['email']
+#         password = request.form['password']
+#         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        
+#         existing_company = Company.query.filter_by(email=email).first()
+#         if existing_company:
+#             flash("Company already exists!", "danger")
+#             return redirect(url_for('signup'))
+        
+#         new_company = Company(company_name=company_name, email=email, password=hashed_password)
+#         db.session.add(new_company)
+#         db.session.commit()
+        
+#         flash("Signup successful! Please log in.", "success")
+#         return redirect(url_for('login'))
+    
+#     return render_template('signup.html')
 
 # Login Route
 @app.route('/login', methods=['GET', 'POST'])
@@ -91,6 +133,38 @@ def dashboard():
     jobs = JobPost.query.filter_by(company_id=session['company_id']).all()
 
     return render_template('company_dashboard.html', company=company, jobs=jobs)
+
+# View all Job posts details on landing page or home page
+@app.route('/view_all_posts')
+def view_all_posts():
+    jobs = JobPost.query.all()
+    return render_template('view_all_posts.html', jobs=jobs)
+
+# Company Job post
+@app.route('/company_posts')
+def company_posts():
+    if 'company_id' not in session:
+        flash("Please log in first!", "danger")
+        return redirect(url_for('login'))
+    
+    company_id = session['company_id']
+    company = Company.query.get(company_id)
+    jobs = JobPost.query.filter_by(company_id=session['company_id']).all()
+
+    return render_template('company_jobPosts.html', company=company, jobs=jobs)
+
+# View Job posts details
+@app.route('/post_details')
+def post_details():
+    if 'company_id' not in session:
+        flash("Please log in first!", "danger")
+        return redirect(url_for('login'))
+    
+    company_id = session['company_id']
+    company = Company.query.get(company_id)
+    jobs = JobPost.query.filter_by(company_id=session['company_id']).all()
+
+    return render_template('view_jobPosts.html', company=company, jobs=jobs)
 
 # Job Post Route
 @app.route('/post-job', methods=['GET', 'POST'])
