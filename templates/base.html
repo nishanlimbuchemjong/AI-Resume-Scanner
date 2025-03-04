@@ -8,112 +8,128 @@
     <!-- BootStrap v5.0 css -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Add Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        .cta-section, .navbar, footer {
+            background: linear-gradient(90deg, #007bff, #6610f2);;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
-    <!-- Navbar with dark background and centered search bar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-      <!-- Company Logo / Application Title -->
-      <a class="navbar-brand" href="{{ url_for('landing_page') }}">
-          <strong>AI Resume Scanner</strong>
-      </a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <!-- Company Logo / Application Title -->
+            <a class="navbar-brand" href="{{ url_for('landing_page') }}">
+                <strong>AI Resume Scanner</strong>
+            </a>
 
-      <!-- Toggler for mobile view -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
+            <!-- Toggler for mobile view -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-      <!-- Navbar Links and Centered Search Bar -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav mx-auto">
-              <!-- Navbar Links (e.g. Home, Jobs, etc.) -->
-              <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{{ url_for('landing_page') }}">Home</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('all_job_posts') }}">Job Posts</a>
-              </li>
-          </ul>
+            <!-- Navbar Links and Centered Search Bar -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <!-- Navbar Links (e.g. Home, Jobs, etc.) -->
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('landing_page') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('all_job_posts') }}">Job Posts</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
 
-        
+                
 
-          <!-- Login and Signup buttons on the right -->
-          <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('signup') }}">Signup</a>
-              </li>
-          </ul>
-      </div>
-  </div>
-</nav>
-
-
-
-    <div class="container">
-
+                <!-- Login and Signup buttons on the right -->
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('signup') }}">Signup</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+        <!-- for other sections -->
         {% block content %}
-        
         {% endblock %}
-    </div>
-    
-    <!-- Footer -->
+
     <!-- Footer for AI Resume Scanner -->
-<footer class="bg-dark text-white py-5 mt-4">
-  <div class="container">
-      <div class="row">
-          <!-- About Section -->
-          <div class="col-md-4">
-              <h5>About AI Resume Scanner</h5>
-              <p>
-                  AI Resume Scanner is an innovative tool designed to help companies efficiently manage job applicants.
-                  By leveraging Artificial Intelligence, we provide automated resume screenings, ensuring that only the
-                  best candidates make it to the interview stage. We aim to streamline the recruitment process, making it
-                  faster and more efficient for both companies and candidates.
-              </p>
-          </div>
+    <footer class="bg-dark text-white py-5 mt-4">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-md-4">
+                    <h5>AI Resume Scanner</h5>
+                    <p class="text-justify">
+                        AI Resume Scanner is an innovative tool designed to help companies efficiently manage job applicants.
+                        By leveraging Artificial Intelligence, we provide automated resume screenings, ensuring that only the
+                        best candidates make it to the interview stage. We aim to streamline the recruitment process, making it
+                        faster and more efficient for both companies and candidates.
+                    </p>
+                </div>
 
-          <!-- Quick Links Section -->
-          <div class="col-md-4">
-              <h5>Quick Links</h5>
-              <ul class="list-unstyled">
-                  <li><a href="{{ url_for('dashboard') }}" class="text-white">Home</a></li>
-                  <li><a href="{{ url_for('post_job') }}" class="text-white">Job Posts</a></li>
-                  <li><a href="{{ url_for('login') }}" class="text-white">Login</a></li>
-                  <li><a href="{{ url_for('signup') }}" class="text-white">Signup</a></li>
-                  <li><a href="#" class="text-white">Contact Us</a></li>
-              </ul>
-          </div>
+                <!-- Quick Links Section -->
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('landing_page') }}" class="text-white">Home</a></li>
+                        <li><a href="{{ url_for('all_job_posts') }}" class="text-white">Job Posts</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-white">Login</a></li>
+                        <li><a href="{{ url_for('signup') }}" class="text-white">Signup</a></li>
+                        <li><a href="#" class="text-white">About</a></li>
+                        <li><a href="#" class="text-white">Contact Us</a></li>
+                    </ul>
+                </div>
 
-          <!-- Contact Information Section -->
-          <div class="col-md-4">
-              <h5>Contact Information</h5>
-              <p><i class="bi bi-geo-alt-fill"></i> Address: 123 AI Street, Tech City</p>
-              <p><i class="bi bi-envelope-fill"></i> Email: support@airesumescanner.com</p>
-              <p><i class="bi bi-telephone-fill"></i> Phone: +1 (123) 456-7890</p>
-          </div>
-      </div>
+                <!-- Contact Information Section -->
+                <div class="col-md-4">
+                    <h5>Contact Information</h5>
+                    <p><i class="bi bi-geo-alt-fill"></i> Address: Lalitpur, Nepal</p>
+                    <p><i class="bi bi-envelope-fill"></i> Email: airesumescanner@gmail.com</p>
+                    <p><i class="bi bi-telephone-fill"></i> Phone: +977-9803012485</p>
+                </div>
+            </div>
 
-      <!-- Social Media Links Section -->
-      <div class="row justify-content-center mt-4">
-          <div class="col-auto">
-              <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
-              <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
-              <a href="#" class="text-white me-3"><i class="bi bi-linkedin"></i></a>
-              <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
-          </div>
-      </div>
+            <!-- Social Media Links Section -->
+            <div class="row justify-content-center mt-4">
+                <div class="col-auto">
+                    <a href="https://www.facebook.com/" class="text-white me-3" target="_blank"><i class="bi bi-facebook"></i></a>
+                    <a href="https://www.twitter.com/" class="text-white me-3" target="_blank"><i class="bi bi-twitter"></i></a>
+                    <a href="https://www.linkedin.com/" class="text-white me-3" target="_blank"><i class="bi bi-linkedin"></i></a>
+                    <a href="https://www.instagram.com/" class="text-white me-3" target="_blank"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
 
-      <!-- Copyright Section -->
-      <div class="text-center mt-4">
-          <p>&copy; 2025 AI Resume Scanner. All Rights Reserved.</p>
-      </div>
-  </div>
-</footer>
+            <!-- Copyright Section -->
+            <div class="text-center mt-4">
+                <p>&copy; 2025 AI Resume Scanner. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
 
 
     <!-- JS -->
@@ -122,5 +138,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
+    <!-- Bootstrap 5 JavaScript and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>  
 </body>
 </html>
