@@ -31,13 +31,19 @@ def all_job_posts():
     jobs = JobPost.query.all()
     return render_template('all_posts.html', jobs=jobs)
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 # SignUp Route
 UPLOAD_FOLDER = 'static/uploads/'  # Folder to store images
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Function to check allowed file extensions
-def allowed_file(filename):
+def allowed_logo_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -48,14 +54,30 @@ def signup():
         password = request.form['password']
         location = request.form['location']
         
-        company_logo = request.files['company_logo']
-        logo_filename = 'static/uploads/logo.png'
+        company_logo = request.files.get('company_logo')
+        logo_filename = 'static/uploads/default_logo.png'
 
-        if company_logo and allowed_file(company_logo.filename):
-            filename = secure_filename(company_logo.filename)
-            logo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            company_logo.save(logo_path)
-            logo_filename = os.path.join('static/uploads', filename) 
+        # if company_logo and allowed_file(company_logo.filename):
+        #     filename = secure_filename(company_logo.filename)
+        #     logo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            
+        #     company_logo.save(logo_path)
+        #     logo_filename = os.path.join('uploads', filename) 
+        if company_logo:
+            print(f"Uploaded file: {company_logo.filename}")  # Debug print statement
+            if allowed_logo_file(company_logo.filename):
+                filename = secure_filename(company_logo.filename)
+                logo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                company_logo.save(logo_path)
+                if os.path.exists(logo_path):  # Check if the file exists after saving
+                    logo_filename = os.path.join('uploads', filename)
+                    print(f"Logo path: {logo_filename}")  # Debug print statement
+                else:
+                    print("Logo file was not saved correctly.")
+            else:
+                logo_filename = 'static/uploads/default_logo.png'
+        else:
+            logo_filename = 'static/uploads/default_logo.png'
 
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         
@@ -71,30 +93,7 @@ def signup():
 
         flash ("Company registered successfully!", "success")
         return redirect(url_for('login'))
-    
     return render_template('signup.html')
-
-# @app.route('/signup', methods=['GET', 'POST'])
-# def signup():
-#     if request.method == 'POST':
-#         company_name = request.form['company_name']
-#         email = request.form['email']
-#         password = request.form['password']
-#         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        
-#         existing_company = Company.query.filter_by(email=email).first()
-#         if existing_company:
-#             flash("Company already exists!", "danger")
-#             return redirect(url_for('signup'))
-        
-#         new_company = Company(company_name=company_name, email=email, password=hashed_password)
-#         db.session.add(new_company)
-#         db.session.commit()
-        
-#         flash("Signup successful! Please log in.", "success")
-#         return redirect(url_for('login'))
-    
-#     return render_template('signup.html')
 
 # Login Route
 @app.route('/login', methods=['GET', 'POST'])
