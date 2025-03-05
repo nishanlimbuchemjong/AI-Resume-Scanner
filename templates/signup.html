@@ -1,34 +1,60 @@
 {% extends 'base.html' %}
 
-{% block title %}Signup - AI Resume Scanner{% endblock %}
+{% block title %}Company Signup - AI Resume Scanner{% endblock %}
 
 {% block content %}
-<!-- <div class="row justify-content-center">
-    <div class="col-md-6"> -->
-        <h2 class="mt-5">Company Signup</h2>
-        <form action="{{ url_for('signup') }}" method="POST" class="mt-4" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="company_name" class="form-label">Company Name</label>
-                <input type="text" class="form-control" id="company_name" name="company_name" required>
-            </div>
-            <div class="mb-3">
-                <label for="location" class="form-label">Location</label>
-                <input type="text" class="form-control" id="location" name="location" required>
-            </div>
-            <div class="mb-3">
-                <label for="company_logo" class="form-label">Company Logo (Optional): </label>
-                <input type="file" class="form-control" id="company_logo" name="company_logo" accept="image/*"/>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Signup</button>
-        </form>
-    <!-- </div>
-</div> -->
+<div class="container">
+    <div class="row justify-content-center align-items-center vh-100  mt-5">
+        <!-- Left Side: Signup Form -->
+        <div class="col-md-6">
+            <h2 class="mb-4 text-primary fw-bold" style="font-family: 'Poppins', sans-serif;">Signup</h2>
+            
+            <form action="{{ url_for('signup') }}" method="POST" enctype="multipart/form-data">
+                <!-- Flash messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="alert alert-dismissible fade show {{ messages[0][0] }}" role="alert">
+                            {{ messages[0][1] }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <div class="mb-3">
+                    <label for="company_name" class="form-label">Company Name</label>
+                    <input type="text" class="form-control" id="company_name" name="company_name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="company_logo" class="form-label">Company Logo (Optional)</label>
+                    <input type="file" class="form-control" id="company_logo" name="company_logo" accept="image/*"/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+            </form>
+
+            <p class="mt-3 text-center">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
+
+        <!-- Right Side: Image -->
+        <div class="col-md-6 d-none d-md-block">
+            <img src="/static/images/sign_up.png" class="img-fluid rounded" alt="Signup">
+        </div>
+    </div>
+</div>
 {% endblock %}
