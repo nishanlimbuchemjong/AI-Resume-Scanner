@@ -122,10 +122,13 @@
 
 
     <!-- Call to Action -->
-    <div class="container text-center my-5">
-        <h2>Ready to Simplify Hiring?</h2>
-        <p>Experience the future of AI-driven hiring with HireIntel AI.</p>
-        <a href="#" class="btn btn-primary">Get Started</a>
+    <div class="container py-5">
+        <section class="cta text-white text-center py-5" style="background: linear-gradient(90deg, #007bff, #6610f2);">
+            <div class="container">
+                <h2 class="display-4 fw-bold">Ready to Simplify Hiring?</h2>
+                <p class="lead">Experience the future of AI-driven hiring with HireIntel AI.</p>
+                <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg">Get Started</a>
+            </div>
+        </section>
     </div>
-
 {% endblock %}
