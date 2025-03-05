@@ -3,34 +3,43 @@
 {% block title %}Company Login - AI Resume Scanner{% endblock %}
 
 {% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center mt-5">
+        <!-- Left side: Login Form -->
+        <div class="col-md-6">
+            <h2 class="mb-4 text-primary fw-bold" style="font-family: 'Poppins', sans-serif;">Login</h2>
+            
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="alert alert-dismissible fade show {{ messages[0][0] }}" role="alert">
+                        {{ messages[0][1] }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            {% endwith %}
 
-    <h2 class="mt-5">Company Login</h2>
-
-    <form method="POST" class="mt-4">
-        <!-- Flash messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="alert alert-dismissible fade show {{ messages[0][0] }}" role="alert">
-                    {{ messages[0][1] }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
                 </div>
-            {% endif %}
-        {% endwith %}
 
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+
+            <p class="mt-3 text-center">Don't have an account? <a href="{{ url_for('signup') }}">Sign up here</a></p>
         </div>
 
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+         <!-- Right side: Image -->
+         <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <img src="/static/images/login.jpg" class="img-fluid" alt="Login Illustration">
         </div>
-
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-
-    <p class="mt-3">Don't have an account? <a href="{{ url_for('signup') }}">Sign up here</a></p>
-
-
+    </div>
+</div>
 {% endblock %}
