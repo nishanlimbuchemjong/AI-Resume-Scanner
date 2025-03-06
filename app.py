@@ -35,16 +35,20 @@ def all_job_posts():
 def about():
     return render_template('about.html')
 
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    return render_template('contact.html')
+
 # SignUp Route
-UPLOAD_FOLDER = 'static/uploads/'  # Folder to store images
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOLDER_LOGO = 'media/uploads/logos/'  # Folder to store images
+if not os.path.exists(UPLOAD_FOLDER_LOGO):
+    os.makedirs(UPLOAD_FOLDER_LOGO)
+ALLOWED_EXTENSIONS_LOGO = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER_LOGO'] = UPLOAD_FOLDER_LOGO
 
 # Function to check allowed file extensions
 def allowed_logo_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_LOGO
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -55,29 +59,32 @@ def signup():
         location = request.form['location']
         
         company_logo = request.files.get('company_logo')
-        logo_filename = 'static/uploads/default_logo.png'
+        logo_filename = None
 
-        # if company_logo and allowed_file(company_logo.filename):
-        #     filename = secure_filename(company_logo.filename)
-        #     logo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            
-        #     company_logo.save(logo_path)
-        #     logo_filename = os.path.join('uploads', filename) 
-        if company_logo:
-            print(f"Uploaded file: {company_logo.filename}")  # Debug print statement
-            if allowed_logo_file(company_logo.filename):
-                filename = secure_filename(company_logo.filename)
-                logo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                company_logo.save(logo_path)
-                if os.path.exists(logo_path):  # Check if the file exists after saving
-                    logo_filename = os.path.join('uploads', filename)
-                    print(f"Logo path: {logo_filename}")  # Debug print statement
-                else:
-                    print("Logo file was not saved correctly.")
-            else:
-                logo_filename = 'static/uploads/default_logo.png'
+        existing_company = Company.query.filter((Company.email == email) | (Company.company_name == company_name)).first()
+        if existing_company:
+            flash("Company name or email already exists!", "danger")
+            return redirect(url_for('signup'))
+        
+        # filename = company_logo.filename.strip()  # Remove leading/trailing spaces
+        # print(f"Trimmed filename: '{filename}'")  # Debug line to show trimmed filename
+
+        # print(f"Company logo: {company_logo}")  # Debug line
+        # print(f"Company filename: {company_logo.filename}")  # Debug line
+        # print(f"Allowed logo file check: {allowed_logo_file(company_logo.filename)}")  # Debug line
+
+        if company_logo and allowed_logo_file(company_logo.filename):
+            # print(f"Inside: Company logo: {company_logo}")  # Debug line
+            filename = secure_filename(company_logo.filename)
+            unique_filename = f"{company_name}_{filename}"
+            logo_path = os.path.join(app.config['UPLOAD_FOLDER_LOGO'], unique_filename)
+            # save the uploaded image
+            company_logo.save(logo_path)
+            # store on a database
+            logo_filename = unique_filename
         else:
-            logo_filename = 'static/uploads/default_logo.png'
+            # print(f"Else: Company logo: {company_logo}")  # Debug line
+            logo_filename = 'media/uploads/logos/logo.png'
 
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         
@@ -265,12 +272,12 @@ def view_applicants(job_id):
     )
 
 # Apply for Job Route
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'pdf'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOLDER_RESUME = 'media/uploads/resume'
+ALLOWED_EXTENSIONS_RESUME = {'pdf'}
+app.config['UPLOAD_FOLDER_RESUME'] = UPLOAD_FOLDER_RESUME
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_RESUME
 
 @app.route('/apply/<int:job_id>', methods=['GET', 'POST'])
 def apply_for_job(job_id):
@@ -294,11 +301,11 @@ def apply_for_job(job_id):
 
         if resume and allowed_file(resume.filename):
             filename = secure_filename(resume.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER_RESUME'], filename)
 
             # Ensure upload folder exists
-            if not os.path.exists(app.config['UPLOAD_FOLDER']):
-                os.makedirs(app.config['UPLOAD_FOLDER'])
+            if not os.path.exists(app.config['UPLOAD_FOLDER_RESUME']):
+                os.makedirs(app.config['UPLOAD_FOLDER_RESUME'])
 
             resume.save(file_path)
 
@@ -341,8 +348,6 @@ def apply_for_job(job_id):
 def calculate_scores():
     calculate_similarity()
     return jsonify({"message": "Matching scores calculated successfully!"})
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
