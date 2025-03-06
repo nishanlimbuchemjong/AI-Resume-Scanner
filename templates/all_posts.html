@@ -17,12 +17,12 @@
     
 </style>
 
-<div class="container">
-    <h3>All Job Posts</h3>
+<div class="container py-5">
+    <h2 class="text-primary">All Job Posts</h2>
         {% if jobs %}
             <div class="row">
                 {% for job in jobs %}
-                    <div class="container py-5">
+                    <div class="container py-2">
                         <section class="features bg-light">
                             <div class="row g-0">
                                 <!-- Left Side: Logo & Button -->
@@ -41,12 +41,28 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <h4 class="card-title" style="color: #0d6efd;">{{ job.job_title|upper }}</h4>
-                                        <h6 class="mb-1"><i class="fas fa-building"></i> <strong>Company Name:</strong>  {{ job.company.company_name }}</h6>
-                                        <p class="mb-1"><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> {{ job.company.location }}</p>
-                                        <p class="mb-1"><i class="fas fa-user-tie"></i> <strong>Job Type:</strong> {{ job.job_type }}</p>
-                                        <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Experience:</strong> {{ job.experience_required }}</p>
-                                        <p class="mb-1"><i class="fas fa-tools"></i> <strong>Key Skills:</strong> {{ job.skills_required }}</p>
+                                        <h4 class="card-title text-primary mb-2">{{ job.job_title|upper }}</h4>
+                                        <br>
+                                        <h6 class="mb-1">
+                                            <i class="fas fa-building text-primary"></i> 
+                                            <strong class="text-primary">Company Name:</strong> {{ job.company.company_name }}
+                                        </h6>
+                                        <p class="mb-1">
+                                            <i class="fas fa-map-marker-alt text-primary"></i> 
+                                            <strong class="text-primary">Location:</strong> {{ job.company.location }}
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="fas fa-user-tie text-primary"></i> 
+                                            <strong class="text-primary">Job Type:</strong> {{ job.job_type }}
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="fas fa-calendar-alt text-primary"></i> 
+                                            <strong class="text-primary">Experience:</strong> {{ job.experience_required }}
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="fas fa-tools text-primary"></i> 
+                                            <strong class="text-primary">Key Skills:</strong> {{ job.skills_required }}
+                                        </p>
                                         <div class="d-flex justify-content-end">
                                             <small class="text-primary">
                                                 <i class="fas fa-calendar"></i> Posted Date: {{ job.created_at.strftime('%b %d, %Y') }}
@@ -56,8 +72,10 @@
                                 </div>
                             </div>
                         </section>
+                        <br>
                     </div>
                 {% endfor %}
+                
             </div>
         {% else %}
             <p>No jobs posted yet.</p>
