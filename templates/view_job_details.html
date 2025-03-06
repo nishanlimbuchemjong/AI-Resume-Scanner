@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center mt-4 py-5">
+    <!-- Company Logo Section -->
+    <div class="me-3">
+      <img src="path-to-your-logo.png" alt="Company Logo" class="img-fluid" style="max-width: 100px;"> <!-- Replace with actual logo path -->
+    </div>
+  
+    <!-- Job Details Section -->
+    <div>
+      <h3 class="text-primary">{{ jobs.company.company_name }}</h3>
+      <p class="mb-1">{{ jobs.company.location }}</p>
+      <p class="mb-1">{{ jobs.company.email }}</p>
+    </div>
+</div>
+  
+  <div class="container mt-4 p-4 bg-light">
+    <div class="row justify-content-center">
+      <!-- Column 1: Offered Salary and Experience -->
+      <div class="col-md-4">
+        <!-- Offered Salary -->
+        <div class="row mb-3 align-items-center">
+          <div class="col-auto">
+            <i class="fas fa-coins fa-2x text-primary"></i> <!-- Icon for Offered Salary -->
+          </div>
+          <div class="col">
+            <div>
+              <strong class="text-primary">Offered Salary</strong>
+              <p>{{ jobs.offered_salary or 'Negotiable' }}</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Experience -->
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <i class="fas fa-briefcase fa-2x text-primary"></i> <!-- Icon for Experience -->
+          </div>
+          <div class="col">
+            <div>
+              <strong class="text-primary">Experience</strong>
+              <p>{{ jobs.experience_required }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Column 2: Job Type, Industry, and Post Date -->
+      <div class="col-md-2">
+        <!-- Job Type -->
+        <div class="row mb-3 align-items-center">
+          <div class="col-auto">
+            <i class="fas fa-calendar-day fa-2x text-primary"></i> <!-- Icon for Job Type -->
+          </div>
+          <div class="col">
+            <div>
+              <strong class="text-primary">Job Type</strong>
+              <p>{{ jobs.job_type }}</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Post Date -->
+        <div class="row mb-3 align-items-center">
+          <div class="col-auto">
+            <i class="fas fa-calendar-alt fa-2x text-primary"></i> <!-- Icon for Post Date -->
+          </div>
+          <div class="col">
+            <div>
+              <strong class="text-primary">Post Date</strong>
+              <p>{{ jobs.created_at.strftime('%b %d, %Y')}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container py-5">
+    <h4>Job Description</h4>
+    <p>{{ jobs.description }}</p>
+    <p><strong>Skills Required:</strong> {{ jobs.skills_required }}</p>
+    <p><strong>Education Required:</strong> {{ jobs.education_required }}</p>
+    
+</div>
+<div class="container py-5 bg-light">
+    <h4>Job Specification</h4>
+    <p><strong>Job Title</strong> {{ jobs.job_title }}</p>
+    <p><strong>Skills Required</strong> {{ jobs.skills_required }}</p>
+    <p><strong>Education Required</strong> {{ jobs.education_required }}</p>
+</div>
+{% endblock %}
