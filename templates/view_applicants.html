@@ -1,9 +1,10 @@
 {% extends "dashboard_base.html" %}
 {% block content %}
 <br>
-    <h2>Applicants for Job Post: {{ job_title }}</h2><br>
-    <table class="table table-hover">
-        <thead>
+<div class="container py-4">
+    <h2 class="text-primary">All Applicants</h2><br>
+    <table class="table table-hover table-borderless">
+        <thead class="table" style="background: linear-gradient(90deg, #007bff, #6610f2);color:white;border-bottom: none !important;">
             <tr>
                 <th>Rank</th>
                 <th>Applicants Name</th>
@@ -65,4 +66,5 @@
             {% endif %}
         </ul>
     </nav>
+</div>
 {% endblock %}
