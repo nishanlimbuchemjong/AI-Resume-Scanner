@@ -42,7 +42,7 @@
 <!-- Image Slider (Bootstrap Carousel) -->
 <div class="container">
     <section class="slider py-5">
-        <div id="aiCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="false">
+        <div id="aiCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="false" data-bs-wrap="true">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#aiCarousel" data-bs-slide-to="0" class="active"></button>
                 <button type="button" data-bs-target="#aiCarousel" data-bs-slide-to="1"></button>
@@ -51,20 +51,26 @@
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="/static/images/banner2.webp" class="d-block w-100 carousel-image" alt="AI Recruitment">
+                    <img src="/static/images/ai_resume_scanner1.jpeg" class="d-block w-100 carousel-image" alt="AI Recruitment">
                 </div>
                 <div class="carousel-item">
-                    <img src="/static/images/banner3.jfif" class="d-block w-100 carousel-image" alt="AI">
+                    <img src="/static/images/ai_resume_scanner2.png" class="d-block w-100 carousel-image" alt="AI">
                 </div>
                 <div class="carousel-item">
-                    <img src="/static/images/banner5.png" class="d-block w-100 carousel-image" alt="AI Matching">
+                    <img src="/static/images/ai_resume_scanner3.png" class="d-block w-100 carousel-image" alt="AI">
                 </div>
+                <div class="carousel-item">
+                    <img src="/static/images/ai_resume_scanner4.png" class="d-block w-100 carousel-image" alt="AI Matching">
+                </div>             
             </div>
+            <!-- Controls -->
             <button class="carousel-control-prev" type="button" data-bs-target="#aiCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#aiCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
             </button>
         </div>
     </section>
@@ -135,8 +141,9 @@
                                     <!-- Person's Image -->
                                     <img src="/static/profiles/boy1.jfif" alt="HR Manager" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                                     <blockquote class="blockquote">
+                                        <p>Tangsang Limbu</p>
                                         <p>"AI Resume Scanner made our hiring process 3x faster!"</p>
-                                        <p class="blockquote-footer">HR Manager, TechCorp</p>
+                                        <p class="blockquote-footer text-primary">HR Manager, TechCorp</p>
                                     </blockquote>
                                 </div>
                             </div>
@@ -145,8 +152,9 @@
                                     <!-- Person's Image -->
                                     <img src="/static/profiles/girl3.jfif" alt="Startup CEO" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                                     <blockquote class="blockquote">
+                                        <p>Prajwala Rai</p>
                                         <p>"We found the perfect candidates in no time!"</p>
-                                        <p class="blockquote-footer">Startup CEO</p>
+                                        <p class="blockquote-footer text-primary">Startup CEO</p>
                                     </blockquote>
                                 </div>
                             </div>
@@ -160,8 +168,9 @@
                                     <!-- Person's Image -->
                                     <img src="/static/profiles/boy2.jfif" alt="Talent Acquisition Head" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                                     <blockquote class="blockquote">
+                                        <p>Johnathan Michael Smith </p>
                                         <p>"A game-changer for recruitment. Highly recommended!"</p>
-                                        <p class="blockquote-footer">Talent Acquisition Head</p>
+                                        <p class="blockquote-footer text-primary">Talent Acquisition Head</p>
                                     </blockquote>
                                 </div>
                             </div>
@@ -170,8 +179,9 @@
                                     <!-- Person's Image -->
                                     <img src="/static/profiles/girl2.jfif" alt="Hiring Manager" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                                     <blockquote class="blockquote">
+                                        <p>Dipa Limbu</p>
                                         <p>"We saved so much time and found better matches!"</p>
-                                        <p class="blockquote-footer">Hiring Manager, InnovateTech</p>
+                                        <p class="blockquote-footer text-primary">Hiring Manager, InnovateTech</p>
                                     </blockquote>
                                 </div>
                             </div>
@@ -185,8 +195,9 @@
                                     <!-- Person's Image -->
                                     <img src="/static/profiles/boy3.jfif" alt="Talent Acquisition Head" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                                     <blockquote class="blockquote">
+                                        <p>Kunjan Khattri</p>
                                         <p>"A game-changer for recruitment. Highly recommended!"</p>
-                                        <p class="blockquote-footer">Talent Acquisition Head</p>
+                                        <p class="blockquote-footer text-primary">Talent Acquisition Head</p>
                                     </blockquote>
                                 </div>
                             </div>
@@ -195,8 +206,9 @@
                                     <!-- Person's Image -->
                                     <img src="/static/profiles/girl1.jfif" alt="Hiring Manager" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
                                     <blockquote class="blockquote">
+                                        <p>Priya Limbu</p>
                                         <p>"We saved so much time and found better matches!"</p>
-                                        <p class="blockquote-footer">Hiring Manager, InnovateTech</p>
+                                        <p class="blockquote-footer text-primary">Hiring Manager, InnovateTech</p>
                                     </blockquote>
                                 </div>
                             </div>
