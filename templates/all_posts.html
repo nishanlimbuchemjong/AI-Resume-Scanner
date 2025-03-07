@@ -27,8 +27,8 @@
                             <div class="row g-0">
                                 <!-- Left Side: Logo & Button -->
                                 <div class="col-md-3 d-flex flex-column align-items-center justify-content-center p-3">
-                                    <img src="{{ url_for('static', filename=job.company.company_logo) }}" alt="Company Logo" class="img-fluid" style="max-width: 200px;">
-                                    <a href="{{ url_for('view_all_posts', job_id=job.job_id) }}" class="btn btn-primary mt-3">View Details</a>
+                                    <img src="{{ url_for('media_files', filename='uploads/logos/' + job.company.company_logo) }}" alt="Company Logo" class="img-fluid" style="max-width: 200px;">
+                                    <a href="{{ url_for('job_details', job_id=job.job_id) }}" class="btn btn-primary mt-3">View Details</a>
                                 </div>
 
                                 <!-- Right Side: Job Details -->
