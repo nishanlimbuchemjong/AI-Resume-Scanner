@@ -164,17 +164,16 @@ def company_posts():
     return render_template('company_jobPosts.html', company=company, jobs=jobs)
 
 # View Job posts details
-@app.route('/post_details')
-def post_details():
+@app.route('/post_details/<int:job_id>', methods=['GET'])
+def post_details(job_id):
     if 'company_id' not in session:
         flash("Please log in first!", "danger")
         return redirect(url_for('login'))
     
     company_id = session['company_id']
-    company = Company.query.get(company_id)
-    jobs = JobPost.query.filter_by(company_id=session['company_id']).all()
+    jobs = JobPost.query.filter_by(job_id=job_id, company_id=company_id).first()
 
-    return render_template('view_jobPosts.html', company=company, jobs=jobs)
+    return render_template('view_jobPosts.html', jobs=jobs)
 
 # Job Post Route
 @app.route('/post-job', methods=['GET', 'POST'])
