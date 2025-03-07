@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from similarity import calculate_similarity
@@ -21,6 +21,10 @@ app.config.from_object(Config)
 db.init_app(app)
 
 migrate = Migrate(app, db)
+
+@app.route('/media/<path:filename>')
+def media_files(filename):
+    return send_from_directory('media', filename)
 
 @app.route('/')
 def landing_page():
@@ -140,11 +144,11 @@ def dashboard():
 
     return render_template('company_dashboard.html', company=company, jobs=jobs)
 
-# View all Job posts details on landing page or home page
-@app.route('/view_all_posts')
-def view_all_posts():
-    jobs = JobPost.query.all()
-    return render_template('view_all_posts.html', jobs=jobs)
+# View specific Job posts details on landing page or home page
+@app.route('/job-details/<int:job_id>', methods=['GET'])
+def job_details(job_id):
+    jobs = JobPost.query.get_or_404(job_id)
+    return render_template('view_job_details.html', jobs=jobs)
 
 # Company Job post
 @app.route('/company_posts')
