@@ -98,7 +98,12 @@
                                             <div class="col-8">
                                                 {{ job.skills_required }}
                                             </div>
-                                        </div>                                
+                                        </div> 
+                                        <div class="d-flex justify-content-end">
+                                            <small class="text-primary">
+                                                <i class="fas fa-calendar"></i> Posted Date: {{ job.created_at.strftime('%b %d, %Y') }}
+                                            </small>
+                                        </div>                                   
                                     </div>
                                 </div>
                             </div>
