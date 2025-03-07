@@ -3,8 +3,8 @@
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center mt-4 py-5">
     <!-- Company Logo Section -->
-    <div class="me-3">
-      <img src="path-to-your-logo.png" alt="Company Logo" class="img-fluid" style="max-width: 100px;"> <!-- Replace with actual logo path -->
+    <div class="me-4">
+      <img src="{{ url_for('media_files', filename='uploads/logos/' + jobs.company.company_logo) }}" alt="Company Logo" class="img-fluid rounded-circle" style="max-width: 105px;"> <!-- Replace with actual logo path -->
     </div>
   
     <!-- Job Details Section -->
@@ -106,14 +106,38 @@
 </div>
 
 <div class="container py-5">
-    <h4>Job Description</h4>
-    <p>{{ jobs.description }}</p>
+    <h4 class="text-primary">Job Description</h4>
+    <p class="text-justify">{{ jobs.description }}</p>
     
 </div>
-<div class="container py-5 bg-light">
-    <h4>Job Specification</h4>
-    <p><strong>Job Title</strong> {{ jobs.job_title }}</p>
-    <p><strong>Skills Required</strong> {{ jobs.skills_required }}</p>
-    <p><strong>Education Required</strong> {{ jobs.education_required }}</p>
+<div class="container py-5 bg-light rounded">
+    <h4 class="text-primary mb-4">Job Specification</h4>
+    
+    <div class="row">
+        <!-- Left Column: Titles -->
+        <div class="col-md-5 fw-bold d-flex flex-column justify-content-between text-primary">
+            <p>Job Title</p>
+            <p class="mt-1">Skills Required
+            </p>
+            
+            <p>Education Required</p>
+        </div>
+
+        <!-- Right Column: Details -->
+        <div class="col-md-7">
+            <p class="mb-3">{{ jobs.job_title }}</p>
+
+            <!-- Skills as an unordered list -->
+            <ul class="list-unstyled m-0 mb-3">
+                {% for skill in jobs.skills_required.split(',') %}
+                    <li>{{ skill.strip() }}</li>
+                {% endfor %}
+            </ul>
+
+            <p class="mb-3">{{ jobs.education_required }}</p>
+        </div>
+    </div>
 </div>
+<br>
+
 {% endblock %}
