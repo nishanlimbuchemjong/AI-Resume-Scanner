@@ -4,7 +4,7 @@
 <div class="container d-flex justify-content-center align-items-center mt-4 py-5">
     <!-- Company Logo Section -->
     <div class="me-4">
-      <img src="{{ url_for('media_files', filename='uploads/logos/' + jobs.company.company_logo) }}" alt="Company Logo" class="img-fluid rounded-circle" style="max-width: 105px; border: 1px solid #0c0b0b26; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);"> <!-- Replace with actual logo path -->
+      <img src="{{ url_for('media_files', filename='uploads/logos/' + jobs.company.company_logo) }}" alt="Company Logo" class="img-fluid rounded-circle" style="max-width: 105px; border: 1px solid #0c0b0b26; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);">
     </div>
   
     <!-- Job Details Section -->
@@ -158,5 +158,9 @@
     </div>
 </div>
 <br>
+<div class="d-flex justify-content-center gap-2">
+    <a href="{{ url_for('apply_for_job', job_id=jobs.job_id)}}" class="btn btn-outline-primary px-4">Apply Now</a>
+    <a href="{{ url_for('all_job_posts') }}" class="btn btn-primary px-4">Back</a>
+</div>
 
 {% endblock %}
