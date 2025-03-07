@@ -3,6 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from similarity import calculate_similarity
 from werkzeug.security import generate_password_hash, check_password_hash
+import smtplib
+from email.mime.text import MIMEText
+from dotenv import load_dotenv
 import psycopg2
 import os
 from config import Config
@@ -39,9 +42,43 @@ def all_job_posts():
 def about():
     return render_template('about.html')
 
+# Loaded environment variables
+load_dotenv()
+
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template('contact.html')
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        subject = request.form.get('subject')
+        message = request.form.get('message')
+
+        # Email content
+        email_body = f"Name: {name}\nEmail: {email}\nSubject: {subject}\n\nMessage:\n{message}"
+
+        # Retrieve credentials from .env
+        sender_email = os.getenv("EMAIL_USER")
+        sender_password = os.getenv("EMAIL_PASS")
+        receiver_email = os.getenv("RECEIVER_EMAIL")
+
+        msg = MIMEText(email_body)
+        msg["Subject"] = f"Contact Form: {subject}"
+        msg["From"] = sender_email
+        msg["To"] = receiver_email
+
+        try:
+            server = smtplib.SMTP("smtp.gmail.com", 587)
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, receiver_email, msg.as_string())
+            server.quit()
+            flash(("Message sent successfully! We will get back to you soon."))
+        except Exception as e:
+            flash(("Failed to send message. Please try again later."))
+
+        return redirect(url_for("contact"))
+
+    return render_template("contact.html")
 
 # SignUp Route
 UPLOAD_FOLDER_LOGO = 'media/uploads/logos/'  # Folder to store images
