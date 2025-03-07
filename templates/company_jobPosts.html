@@ -29,6 +29,7 @@
                                 <div class="col-md-3 d-flex flex-column align-items-center justify-content-center p-3">
                                     <img src="{{ url_for('media_files', filename='uploads/logos/' + job.company.company_logo) }}" alt="Company Logo" class="img-fluid" style="max-width: 200px;">
                                     <a href="{{ url_for('post_details', job_id=job.job_id) }}" class="btn btn-primary mt-3">View Details</a>
+                                
                                 </div>
 
                                 <!-- Right Side: Job Details -->
@@ -62,6 +63,10 @@
                                         <p class="mb-1">
                                             <i class="fas fa-tools text-primary"></i> 
                                             <strong class="text-primary">Key Skills:</strong> {{ job.skills_required }}
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="fas fa-users text-primary"></i> 
+                                            <strong class="text-primary">View applicants:</strong> <a href="{{ url_for('view_applicants', job_id=job.job_id) }}" class="text-secondary mt-3">Click Here</a>
                                         </p>
                                         <div class="d-flex justify-content-end">
                                             <small class="text-primary">
