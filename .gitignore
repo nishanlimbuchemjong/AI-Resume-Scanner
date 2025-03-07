@@ -17,6 +17,9 @@ ENV/
 .venv/
 *.egg-info/
 
+# .env where emails and password are stored
+.env
+
 # mirgraitons
 migrations/
 
