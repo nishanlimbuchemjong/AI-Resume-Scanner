@@ -44,35 +44,72 @@
                                         </div>
                                         <h4 class="card-title text-primary mb-2">{{ job.job_title|upper }}</h4>
                                         <br>
-                                        <h6 class="mb-1">
-                                            <i class="fas fa-building text-primary"></i> 
-                                            <strong class="text-primary">Company Name:</strong> {{ job.company.company_name }}
-                                        </h6>
-                                        <p class="mb-1">
-                                            <i class="fas fa-map-marker-alt text-primary"></i> 
-                                            <strong class="text-primary">Location:</strong> {{ job.company.location }}
-                                        </p>
-                                        <p class="mb-1">
-                                            <i class="fas fa-user-tie text-primary"></i> 
-                                            <strong class="text-primary">Job Type:</strong> {{ job.job_type }}
-                                        </p>
-                                        <p class="mb-1">
-                                            <i class="fas fa-calendar-alt text-primary"></i> 
-                                            <strong class="text-primary">Experience:</strong> {{ job.experience_required }}
-                                        </p>
-                                        <p class="mb-1">
-                                            <i class="fas fa-tools text-primary"></i> 
-                                            <strong class="text-primary">Key Skills:</strong> {{ job.skills_required }}
-                                        </p>
-                                        <p class="mb-1">
-                                            <i class="fas fa-users text-primary"></i> 
-                                            <strong class="text-primary">View applicants:</strong> <a href="{{ url_for('view_applicants', job_id=job.job_id) }}" class="text-secondary mt-3">Click Here</a>
-                                        </p>
-                                        <div class="d-flex justify-content-end">
-                                            <small class="text-primary">
-                                                <i class="fas fa-calendar"></i> Posted Date: {{ job.created_at.strftime('%b %d, %Y') }}
-                                            </small>
-                                        </div>                                        
+                                        <!-- Job Details in Two Columns -->
+                                        <div class="row mb-2">
+                                            <!-- Left Column (Titles) -->
+                                            <div class="col-3">
+                                                <strong class="text-primary">Company Name:</strong>
+                                            </div>
+                                            <!-- Right Column (Texts) -->
+                                            <div class="col-8">
+                                                {{ job.company.company_name }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <!-- Left Column (Titles) -->
+                                            <div class="col-3">
+                                                <strong class="text-primary">Location:</strong>
+                                            </div>
+                                            <!-- Right Column (Texts) -->
+                                            <div class="col-8">
+                                                {{ job.company.location }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <!-- Left Column (Titles) -->
+                                            <div class="col-3">
+                                                <strong class="text-primary">Job Type:</strong>
+                                            </div>
+                                            <!-- Right Column (Texts) -->
+                                            <div class="col-8">
+                                                {{ job.job_type }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <!-- Left Column (Titles) -->
+                                            <div class="col-3">
+                                                <strong class="text-primary">Experience:</strong>
+                                            </div>
+                                            <!-- Right Column (Texts) -->
+                                            <div class="col-8">
+                                                {{ job.experience_required }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <!-- Left Column (Titles) -->
+                                            <div class="col-3">
+                                                <strong class="text-primary">Key Skills:</strong>
+                                            </div>
+                                            <!-- Right Column (Texts) -->
+                                            <div class="col-8">
+                                                {{ job.skills_required }}
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <!-- Left Column (Titles) -->
+                                            <div class="col-3">
+                                                <strong class="text-primary">View applicants:</strong>
+                                            </div>
+                                            <!-- Right Column (Texts) -->
+                                            <div class="col-8">
+                                                <a href="{{ url_for('view_applicants', job_id=job.job_id) }}" class="text-secondary">Click Here</a>
+                                            </div>
+                                        </div>                                       
                                     </div>
                                 </div>
                             </div>
