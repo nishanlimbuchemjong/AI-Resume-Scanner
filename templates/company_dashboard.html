@@ -1,49 +1,62 @@
 {% extends "dashboard_base.html" %}
 {% block content %}
+<section class="cta text-white text-center py-5" style="background: linear-gradient(90deg, #007bff, #6610f2);">
+    <div class="container">
+        <h2 class="display-4 fw-bold">Ready to Grow?</h2>
+        <h2>Let’s Find the Perfect Fit for Your Team!</h2>
+        <p class="lead">Welcome, {{ company.company_name }}! Find the perfect talent to join your team. Post a job and attract top candidates now.</p>
+        <a href="{{ url_for('post_job') }}" class="btn btn-light btn-lg text-primary">+ Post New Job</a>
+    </div>
+</section>
 <div class="container mt-4">
-    <h2>Welcome, {{ company.company_name }}!</h2>
-    <a href="{{ url_for('post_job') }}" class="btn btn-primary mb-3">+ Post a Job</a>
-
-    <!-- Quick Stats Row -->
-    <div class="row text-center">
-        <div class="col-md-3">
-            <div class="card text-white" style="background: linear-gradient(90deg, #007bff, #6610f2);">
-                <div class="card-body">
-                    <h3>456</h3>
-                    <!-- <h3>{{ total_job_posts }}</h3> -->
-                    <h5>Total Job Posts</h5>
+   <!-- Quick Stats Row -->
+<div class="row text-center">
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm border-0 rounded">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-briefcase fa-3x text-primary"></i>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white" style="background: linear-gradient(90deg, #007bff, #6610f2);">
-                <div class="card-body">
-                    <h3>456</h3>
-                    <!-- <h3>{{ total_applications }}</h3> -->
-                    <h5>Total Applications</h5>
-                    
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white" style="background: linear-gradient(90deg, #007bff, #6610f2);">
-                <div class="card-body">
-                    <h3>543</h3>
-                    <!-- <h3>{{ shortlisted_candidates }}</h3> -->
-                    <h5>Shortlisted Candidates</h5>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white" style="background: linear-gradient(90deg, #007bff, #6610f2);">
-                <div class="card-body">
-                    <h3>56</h3>
-                    <!-- <h3>{{ active_job_posts }}</h3> -->
-                    <h5>Active Job Posts</h5>
-                </div>
+                <h3>456</h3>
+                <h5>Total Job Posts</h5>
             </div>
         </div>
     </div>
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm border-0 rounded">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-file-pdf fa-3x text-danger"></i>
+                </div>
+                <h3>456</h3>
+                <h5>Total Applications</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm border-0 rounded">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-users fa-3x text-warning"></i>
+                </div>
+                <h3>543</h3>
+                <h5>Shortlisted Candidates</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm border-0 rounded">
+            <div class="card-body">
+                <div class="mb-3">
+                    <i class="fas fa-clipboard-list fa-3x text-success"></i>
+                </div>
+                <h3>56</h3>
+                <h5>Active Job Posts</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
 
      <!-- Row for Pie Charts -->
      <div class="row mt-4 py-5">
