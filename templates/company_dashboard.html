@@ -2,6 +2,203 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Welcome, {{ company.company_name }}!</h2>
-    <a href="{{ url_for('post_job') }}" class="btn btn-primary mb-3">+ Post a Job</a><br>
+    <a href="{{ url_for('post_job') }}" class="btn btn-primary mb-3">+ Post a Job</a>
+
+    <!-- Quick Stats Row -->
+    <div class="row text-center">
+        <div class="col-md-3">
+            <div class="card text-white" style="background: linear-gradient(90deg, #007bff, #6610f2);">
+                <div class="card-body">
+                    <h3>456</h3>
+                    <!-- <h3>{{ total_job_posts }}</h3> -->
+                    <h5>Total Job Posts</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white" style="background: linear-gradient(90deg, #007bff, #6610f2);">
+                <div class="card-body">
+                    <h3>456</h3>
+                    <!-- <h3>{{ total_applications }}</h3> -->
+                    <h5>Total Applications</h5>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white" style="background: linear-gradient(90deg, #007bff, #6610f2);">
+                <div class="card-body">
+                    <h3>543</h3>
+                    <!-- <h3>{{ shortlisted_candidates }}</h3> -->
+                    <h5>Shortlisted Candidates</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white" style="background: linear-gradient(90deg, #007bff, #6610f2);">
+                <div class="card-body">
+                    <h3>56</h3>
+                    <!-- <h3>{{ active_job_posts }}</h3> -->
+                    <h5>Active Job Posts</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Row for Pie Charts -->
+     <div class="row mt-4 py-5">
+        <div class="col-md-6">
+            <h3 class="text-primary">Applicants by Job Category</h3>
+            <canvas id="jobCategoryPie" style="width: 300px; height: 50px"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h3 class="text-justify text-end text-primary">Applicants per Job Post</h3>
+            <canvas id="applicantSourcePie"></canvas>
+        </div>
+    </div>
+
+    <!-- Insights & Reports -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h4>Top Performing Job Posts</h4>
+            <table class="table table-hover table-borderless">
+                <thead class="table" style="background: linear-gradient(90deg, #007bff, #6610f2);color:white;border-bottom: none !important;">
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Total Applicants</th>
+                        <th>Highest Match Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Front-End Developer</td>
+                        <td>8000</td>
+                        <td>95%</td>
+                    </tr>
+                    <tr>
+                        <td>Back-End Developer</td>
+                        <td>5000</td>
+                        <td>92%</td>
+                    </tr>
+                    <tr>
+                        <td>Full Stack Web Developer</td>
+                        <td>900</td>
+                        <td>89%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Top 5 Best Matched Candidates Table -->
+    <div class="mt-5">
+        <h4>Top 5 Best-Matched Candidates</h4>
+        <table class="table table-hover table-borderless">
+            <thead class="table" style="background: linear-gradient(90deg, #007bff, #6610f2);color:white;border-bottom: none !important;">
+                <tr>
+                    <th>Rank</th>
+                    <th>Applicants Name</th>
+                    <th>Job Title</th>
+                    <th>Resume Score (%)</th>
+                    <th>Experience</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td>1</td>
+                    <td>Saru Limbu</td>
+                    <td>UI/UX Designer</td>
+                    <td>98%</td>
+                    <td>4 years</td>
+                    <td>
+                        <a href="" class="btn btn-sm btn-primary">View</a>
+                        <a href="" class="btn btn-sm btn-outline-primary">Download</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Saru Limbu</td>
+                    <td>UI/UX Designer</td>
+                    <td>98%</td>
+                    <td>4 years</td>
+                    <td>
+                        <a href="" class="btn btn-sm btn-primary">View</a>
+                        <a href="" class="btn btn-sm btn-outline-primary">Download</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Saru Limbu</td>
+                    <td>UI/UX Designer</td>
+                    <td>98%</td>
+                    <td>4 years</td>
+                    <td>
+                        <a href="" class="btn btn-sm btn-primary">View</a>
+                        <a href="" class="btn btn-sm btn-outline-primary">Download</a>
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+
 </div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+   
+// Job Category Distribution
+new Chart(document.getElementById("jobCategoryPie"), {
+    type: 'doughnut',
+    data: {
+        labels: ['IT', 'Finance', 'Marketing', 'HR', 'Engineering'],
+        datasets: [{
+            data: [30, 20, 15, 10, 25],
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'left', 
+                align: 'start', 
+                labels: {
+                    boxWidth: 20,
+                    padding: 10  
+                }
+            }
+        }
+    }
+});
+
+    // Applicant Source Distribution
+    new Chart(document.getElementById("applicantSourcePie"), {
+        type: 'doughnut',
+        data: {
+            labels: ['Full-Stack Developer', 'Front-End Developer', 'Back-End Developer', 'UI/UX Designer'],
+            datasets: [{
+                data: [40, 30, 20, 10],
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right', 
+                    align: 'start',  
+                    labels: {
+                        boxWidth: 20, 
+                        padding: 10 
+                    }
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}
