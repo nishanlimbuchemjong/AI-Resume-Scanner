@@ -244,6 +244,11 @@ def dashboard():
 @app.route('/job-details/<int:job_id>', methods=['GET'])
 def job_details(job_id):
     jobs = JobPost.query.get_or_404(job_id)
+
+    # Increment the view count
+    jobs.views += 1
+    db.session.commit() 
+
     return render_template('view_job_details.html', jobs=jobs)
 
 # Company Job post
