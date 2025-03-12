@@ -228,6 +228,16 @@ def dashboard():
         db.desc(ResumeScore.matching_score)
     ).limit(5).all()  # Limit to top 5 candidates
 
+    # Applicants by Job Category (new query)
+    applicants_by_category = db.session.query(
+        JobPost.job_category,
+        db.func.count(Resume.resume_id).label('applicant_count')
+    ).join(Resume, JobPost.job_id == Resume.job_id).filter(JobPost.company_id == company_id).group_by(JobPost.job_category).all()
+
+    # Extract categories and applicant counts for the pie chart
+    categories = [item.job_category for item in applicants_by_category]
+    applicant_counts_category = [item.applicant_count for item in applicants_by_category]
+
     return render_template('company_dashboard.html', 
                            company=company, 
                            jobs=jobs, 
@@ -238,7 +248,9 @@ def dashboard():
                            job_titles=job_titles,
                            applicant_counts=applicant_counts,
                            top_performing_jobs=top_performing_jobs,
-                           top_matched_candidates=top_matched_candidates)
+                           top_matched_candidates=top_matched_candidates,
+                           categories=categories,
+                           applicant_counts_category=applicant_counts_category)
 
 # View specific Job posts details on landing page or home page
 @app.route('/job-details/<int:job_id>', methods=['GET'])
