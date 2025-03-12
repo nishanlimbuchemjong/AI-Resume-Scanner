@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 import psycopg2
 import os
 from config import Config
-from models import db, Company, JobPost, JobPostStatus, Resume
+from models import db, Company, JobPost, JobPostStatus, Resume, ResumeScore
 from werkzeug.utils import secure_filename
 from drive_auth import upload_to_drive
 from pdf_extractor import extract_text_from_pdf, extract_skills, extract_experience, extract_education
@@ -179,7 +179,31 @@ def dashboard():
     company = Company.query.get(company_id)
     jobs = JobPost.query.filter_by(company_id=session['company_id']).all()
 
-    return render_template('company_dashboard.html', company=company, jobs=jobs)
+    # Fetch the total number of job posts
+    total_job_posts = JobPost.query.filter_by(company_id=company_id).count()
+
+    # Fetch the total number of applications
+    total_applications = Resume.query.filter(Resume.job_id.in_(
+        db.session.query(JobPost.job_id).filter_by(company_id=company_id)
+    )).count()
+
+    # Fetch the number of active job posts
+    active_job_posts = JobPost.query.filter_by(company_id=company_id, status='active').count()
+
+    # Fetch the number of shortlisted candidates (Assuming a threshold score of 80)
+    shortlisted_candidates = db.session.query(Resume).join(ResumeScore).filter(
+        Resume.job_id.in_(
+            db.session.query(JobPost.job_id).filter_by(company_id=company_id)
+        ),
+        ResumeScore.matching_score >= 80).count()
+
+    return render_template('company_dashboard.html', 
+                           company=company, 
+                           jobs=jobs, 
+                           total_job_posts=total_job_posts,
+                           total_applications=total_applications,
+                           active_job_posts=active_job_posts,
+                           shortlisted_candidates=shortlisted_candidates)
 
 # View specific Job posts details on landing page or home page
 @app.route('/job-details/<int:job_id>', methods=['GET'])
