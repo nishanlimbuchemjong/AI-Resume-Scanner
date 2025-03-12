@@ -83,21 +83,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Front-End Developer</td>
-                        <td>8000</td>
-                        <td>95%</td>
-                    </tr>
-                    <tr>
-                        <td>Back-End Developer</td>
-                        <td>5000</td>
-                        <td>92%</td>
-                    </tr>
-                    <tr>
-                        <td>Full Stack Web Developer</td>
-                        <td>900</td>
-                        <td>89%</td>
-                    </tr>
+                    {% for job in top_performing_jobs %}
+                        <tr>
+                            <td>{{ job[0] }}</td>  <!-- Job Title -->
+                            <td>{{ job[1] }}</td>  <!-- Total Applicants -->
+                            <td>{{ job[2] }}%</td> <!-- Highest Match Score -->
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -118,40 +110,25 @@
                 </tr>
             </thead>
             <tbody>
-                
+                {% for candidate in top_matched_candidates %}
                 <tr>
-                    <td>1</td>
-                    <td>Saru Limbu</td>
-                    <td>UI/UX Designer</td>
-                    <td>98%</td>
-                    <td>4 years</td>
+                    <td>{{ loop.index }}</td>  <!-- loop.index provides the index -->
+                    <td>{{ candidate.applicant_name }}</td>
+                    <td>{{ candidate.job_title }}</td>
+                    <td>{{ candidate.matching_score }}%</td>
                     <td>
-                        <a href="" class="btn btn-sm btn-primary">View</a>
-                        <a href="" class="btn btn-sm btn-outline-primary">Download</a>
+                        {% if candidate.experience_years %}
+                            {{ candidate.experience_years }}
+                        {% else %}
+                            No Experience
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-primary">View</a>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Download</a>
                     </td>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Saru Limbu</td>
-                    <td>UI/UX Designer</td>
-                    <td>98%</td>
-                    <td>4 years</td>
-                    <td>
-                        <a href="" class="btn btn-sm btn-primary">View</a>
-                        <a href="" class="btn btn-sm btn-outline-primary">Download</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Saru Limbu</td>
-                    <td>UI/UX Designer</td>
-                    <td>98%</td>
-                    <td>4 years</td>
-                    <td>
-                        <a href="" class="btn btn-sm btn-primary">View</a>
-                        <a href="" class="btn btn-sm btn-outline-primary">Download</a>
-                    </td>
-                </tr>
+                {% endfor %}
                 
             </tbody>
         </table>

@@ -205,6 +205,29 @@ def dashboard():
     job_titles = [job[0] for job in applicants_per_job]
     applicant_counts = [job[1] for job in applicants_per_job]
 
+    # Fetch the top-performing job posts (sorted by applicant count)
+    top_performing_jobs = db.session.query(
+        JobPost.job_title, 
+        db.func.count(Resume.resume_id).label("applicant_count"),
+        db.func.coalesce(db.func.max(ResumeScore.matching_score), 0).label("highest_score")
+    ).join(Resume, JobPost.job_id == Resume.job_id).outerjoin(
+        ResumeScore, Resume.resume_id == ResumeScore.resume_id
+    ).filter(JobPost.company_id == company_id).group_by(JobPost.job_title).order_by(
+        db.desc("applicant_count")
+    ).limit(5).all()  # Limit to top 5 performing job posts
+
+    # Fetch the top 5 best-matched candidates for each job post
+    top_matched_candidates = db.session.query(
+        Resume.applicant_name,
+        JobPost.job_title,
+        ResumeScore.matching_score,
+        Resume.experience
+    ).join(ResumeScore, Resume.resume_id == ResumeScore.resume_id).join(
+        JobPost, Resume.job_id == JobPost.job_id
+    ).filter(JobPost.company_id == company_id).order_by(
+        db.desc(ResumeScore.matching_score)
+    ).limit(5).all()  # Limit to top 5 candidates
+
     return render_template('company_dashboard.html', 
                            company=company, 
                            jobs=jobs, 
@@ -213,7 +236,9 @@ def dashboard():
                            active_job_posts=active_job_posts,
                            shortlisted_candidates=shortlisted_candidates,
                            job_titles=job_titles,
-                           applicant_counts=applicant_counts)
+                           applicant_counts=applicant_counts,
+                           top_performing_jobs=top_performing_jobs,
+                           top_matched_candidates=top_matched_candidates)
 
 # View specific Job posts details on landing page or home page
 @app.route('/job-details/<int:job_id>', methods=['GET'])
