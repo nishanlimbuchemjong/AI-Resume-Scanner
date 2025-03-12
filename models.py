@@ -43,9 +43,10 @@ class JobPost(db.Model):
     created_at = db.Column(db.TIMESTAMP, default=db.func.current_timestamp(), nullable=False)
     status = db.Column(Enum(JobPostStatus), default=JobPostStatus.active, nullable=False)
     views = db.Column(db.Integer, default=0)
+    vacancy = db.Column(db.Integer, default=1)
     job_category = db.Column(db.String(100), nullable=False)
     closing_date = db.Column(db.Date, nullable=False)
-    
+
     # Relationship with resumes
     resumes = db.relationship('Resume', backref='job_post', lazy=True, cascade="all, delete-orphan")
 
