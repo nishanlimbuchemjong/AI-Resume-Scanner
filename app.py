@@ -197,13 +197,23 @@ def dashboard():
         ),
         ResumeScore.matching_score >= 80).count()
 
+    # Fetch the number of applicants per job post
+    applicants_per_job = db.session.query(
+        JobPost.job_title, db.func.count(Resume.resume_id)
+    ).join(Resume, JobPost.job_id == Resume.job_id).filter(JobPost.company_id == company_id).group_by(JobPost.job_title).all()
+    
+    job_titles = [job[0] for job in applicants_per_job]
+    applicant_counts = [job[1] for job in applicants_per_job]
+
     return render_template('company_dashboard.html', 
                            company=company, 
                            jobs=jobs, 
                            total_job_posts=total_job_posts,
                            total_applications=total_applications,
                            active_job_posts=active_job_posts,
-                           shortlisted_candidates=shortlisted_candidates)
+                           shortlisted_candidates=shortlisted_candidates,
+                           job_titles=job_titles,
+                           applicant_counts=applicant_counts)
 
 # View specific Job posts details on landing page or home page
 @app.route('/job-details/<int:job_id>', methods=['GET'])

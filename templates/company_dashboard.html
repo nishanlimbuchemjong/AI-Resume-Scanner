@@ -58,8 +58,8 @@
 </div>
 
 
-     <!-- Row for Pie Charts -->
-     <div class="row mt-4 py-5">
+    <!-- Row for Pie Charts -->
+    <div class="row mt-4 py-5">
         <div class="col-md-6">
             <h3 class="text-primary">Applicants by Job Category</h3>
             <canvas id="jobCategoryPie" style="width: 300px; height: 50px"></canvas>
@@ -190,13 +190,23 @@ new Chart(document.getElementById("jobCategoryPie"), {
 });
 
     // Applicant Source Distribution
+    var jobTitles = JSON.parse('{{ job_titles | tojson | safe }}');
+    var applicantCounts = JSON.parse('{{ applicant_counts | tojson | safe }}');
+
+    // Function to generate a random color
+    function getRandomColor() {
+        return `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    }
+    // Generate random colors dynamically based on job title count
+    var backgroundColors = jobTitles.map(() => getRandomColor());
+
     new Chart(document.getElementById("applicantSourcePie"), {
         type: 'doughnut',
         data: {
-            labels: ['Full-Stack Developer', 'Front-End Developer', 'Back-End Developer', 'UI/UX Designer'],
+            labels: jobTitles,
             datasets: [{
-                data: [40, 30, 20, 10],
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+                data: applicantCounts,
+                backgroundColor: backgroundColors
             }]
         },
         options: {
