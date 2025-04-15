@@ -263,6 +263,7 @@ def job_details(job_id):
 
     return render_template('view_job_details.html', jobs=jobs)
 
+
 # Company Job post
 @app.route('/company_posts')
 def company_posts():
@@ -357,7 +358,13 @@ def view_applicants(job_id):
             "email": row[2],
             "score": row[3],
             "rank": row[4],
-            "resume_link": row[5]
+            "resume_link": row[5],
+            "score_label": (
+                            "Excellent" if row[3] >= 85 else
+                            "Good" if row[3] >= 70 else
+                            "Average" if row[3] >= 50 else
+                            "Poor"
+                        )
         }
         for row in result
     ]

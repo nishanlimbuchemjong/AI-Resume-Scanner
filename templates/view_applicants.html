@@ -11,6 +11,7 @@
                 <th>Email</th>
                 <th>Resume Link</th>
                 <th>Score</th>
+                <th>Score Label</th>
             </tr>
         </thead>
         <tbody>
@@ -26,7 +27,19 @@
                     No Resume Available
                     {% endif %}
                 </td>
-                <td>{{ applicant.score|round(2) }}</td>
+                <td>{{ applicant.score|round(2) }} %</td>
+                <td>
+                    {% if applicant.score_label == 'Excellent' %}
+                        <span class="btn btn-success btn-sm text-center" style="width: 80px;">{{ applicant.score_label }}</span>
+                    {% elif applicant.score_label == 'Good' %}
+                        <span class="btn btn-primary btn-sm text-center" style="width: 80px;">{{ applicant.score_label }}</span>
+                    {% elif applicant.score_label == 'Average' %}
+                        <span class="btn btn-warning btn-sm text-center text-white" style="width: 80px;">{{ applicant.score_label }}</span>
+                    {% else %}
+                        <span class="btn btn-danger btn-sm text-center" style="width: 80px;">{{ applicant.score_label }}</span>
+                    {% endif %}
+                </td>
+                
             </tr>
             {% endfor %}
         </tbody>
