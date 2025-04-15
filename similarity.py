@@ -36,7 +36,7 @@ def calculate_similarity():
     resume_tfidf = vectorizer.transform(df_combined['cleaned_resume_text'])
     job_tfidf = vectorizer.transform(df_combined['cleaned_job_desc'])
 
-    df_combined['similarity_score'] = cosine_similarity(resume_tfidf, job_tfidf).diagonal()
+    df_combined['similarity_score'] = cosine_similarity(resume_tfidf, job_tfidf).diagonal() * 100
 
     # Jaccard Similarity for Skills
     def jaccard_similarity(list1, list2):
@@ -59,13 +59,16 @@ def calculate_similarity():
 
     # Final Matching Score Calculation
     df_combined['matching_score'] = (
-        (df_combined['similarity_score'] * 0.4) +
+        (df_combined['similarity_score'] *  0.4) +
         (df_combined['skills_similarity'] * 0.3) +
         (df_combined['experience_match'] * 0.2) +
         (df_combined['education_match'] * 0.1)
-    )
+    ).round(2)
 
-    # Rank Resumes for Each Job
+    # Scale to percentage range (0 to 100)
+    df_combined['matching_score'] = (df_combined['matching_score'] * 10).round(2)
+
+    # Rank Resumes for Each Jobx
     df_combined['rank'] = df_combined.groupby('job_id')['matching_score'].rank(method='first', ascending=False).astype(int)
 
     # Delete previous scores for these job_ids to prevent duplicate entries
@@ -79,3 +82,6 @@ def calculate_similarity():
     df_combined[['resume_id', 'job_id', 'matching_score', 'rank']].to_sql('resume_scores', engine, if_exists='append', index=False)
 
     print("Scores and ranks updated successfully!")
+    # Inspect first few rows of combined data to see individual scores
+    print(df_combined[['resume_id', 'job_id', 'similarity_score', 'skills_similarity', 'experience_match', 'education_match', 'matching_score']].head())
+
