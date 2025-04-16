@@ -14,6 +14,11 @@ from werkzeug.utils import secure_filename
 from drive_auth import upload_to_drive
 from pdf_extractor import extract_text_from_pdf, extract_skills, extract_experience, extract_education
 from database import get_connection
+import requests
+from flask import Response
+import re
+from io import BytesIO
+from flask import send_file
 
 app = Flask(__name__)
 
@@ -218,10 +223,12 @@ def dashboard():
 
     # Fetch the top 5 best-matched candidates for each job post
     top_matched_candidates = db.session.query(
+        Resume.resume_id,
         Resume.applicant_name,
         JobPost.job_title,
         ResumeScore.matching_score,
-        Resume.experience
+        Resume.experience, 
+        Resume.resume_file
     ).join(ResumeScore, Resume.resume_id == ResumeScore.resume_id).join(
         JobPost, Resume.job_id == JobPost.job_id
     ).filter(JobPost.company_id == company_id).order_by(
@@ -250,7 +257,31 @@ def dashboard():
                            top_performing_jobs=top_performing_jobs,
                            top_matched_candidates=top_matched_candidates,
                            categories=categories,
-                           applicant_counts_category=applicant_counts_category)
+                           applicant_counts_category=applicant_counts_category
+                           )
+
+# @app.route('/resume/<int:candidate_id>/view')
+# def view_resume(candidate_id):
+#     # Fetch the candidate's resume link from the database
+#     candidate = Resume.query.get(candidate_id)
+#     if not candidate or not candidate.resume_link:
+#         flash("Resume not found!", "danger")
+#         return redirect(url_for('dashboard'))
+    
+#     # Redirect to the resume link (e.g., Google Drive)
+#     return redirect(candidate.resume_link)
+
+# @app.route('/resume/<int:candidate_id>/download')
+# def download_resume(candidate_id):
+#     # Fetch the candidate's resume link from the database
+#     candidate = Resume.query.get(candidate_id)
+#     if not candidate or not candidate.resume_link:
+#         flash("Resume not found!", "danger")
+#         return redirect(url_for('dashboard'))
+    
+#     # Replace '/view' with '/uc' to enable downloading from Google Drive
+#     download_link = candidate.resume_link.replace('/view', '/uc')
+#     return redirect(download_link)
 
 # View specific Job posts details on landing page or home page
 @app.route('/job-details/<int:job_id>', methods=['GET'])

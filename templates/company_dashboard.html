@@ -124,9 +124,9 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-primary">View</a>
-                        <a href="#" class="btn btn-sm btn-outline-primary">Download</a>
+                        <a href="{{ candidate.resume_file }}" target="_blank" class="btn btn-primary btn-sm" style="width: 90px;">View</a>            
                     </td>
+                    
                 </tr>
                 {% endfor %}
                 
@@ -141,39 +141,46 @@
 <script>
 
    
-// Job Category Distribution
-new Chart(document.getElementById("jobCategoryPie"), {
-    type: 'doughnut',
-    data: {
-        labels: ['IT', 'Finance', 'Marketing', 'HR', 'Engineering'],
-        datasets: [{
-            data: [30, 20, 15, 10, 25],
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'left', 
-                align: 'start', 
-                labels: {
-                    boxWidth: 20,
-                    padding: 10  
-                }
-            }
-        }
-    }
-});
-
-    // Applicant Source Distribution
-    var jobTitles = JSON.parse('{{ job_titles | tojson | safe }}');
-    var applicantCounts = JSON.parse('{{ applicant_counts | tojson | safe }}');
+    // Job Category Distribution
+    var categories = JSON.parse('{{ categories | tojson | safe }}');
+    var applicantCountsCategory = JSON.parse('{{ applicant_counts_category | tojson | safe }}');
 
     // Function to generate a random color
     function getRandomColor() {
         return `#${Math.floor(Math.random()*16777215).toString(16)}`;
     }
+
+    // Generate random colors dynamically based on category count
+    var backgroundColors = categories.map(() => getRandomColor());
+
+    new Chart(document.getElementById("jobCategoryPie"), {
+        type: 'doughnut',
+        data: {
+            labels: categories,
+            datasets: [{
+                data: applicantCountsCategory,
+                backgroundColor: backgroundColors
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right', 
+                    align: 'start',  
+                    labels: {
+                        boxWidth: 20, 
+                        padding: 10 
+                    }
+                }
+            }
+        }
+    });
+
+    // Applicant Source Distribution
+    var jobTitles = JSON.parse('{{ job_titles | tojson | safe }}');
+    var applicantCounts = JSON.parse('{{ applicant_counts | tojson | safe }}');
+
     // Generate random colors dynamically based on job title count
     var backgroundColors = jobTitles.map(() => getRandomColor());
 
