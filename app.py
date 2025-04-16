@@ -231,6 +231,9 @@ def dashboard():
         Resume.resume_file
     ).join(ResumeScore, Resume.resume_id == ResumeScore.resume_id).join(
         JobPost, Resume.job_id == JobPost.job_id
+    ).filter(
+        JobPost.company_id == company_id,
+        ResumeScore.matching_score > 50
     ).filter(JobPost.company_id == company_id).order_by(
         db.desc(ResumeScore.matching_score)
     ).limit(5).all()  # Limit to top 5 candidates
