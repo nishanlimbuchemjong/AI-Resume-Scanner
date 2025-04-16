@@ -260,29 +260,6 @@ def dashboard():
                            applicant_counts_category=applicant_counts_category
                            )
 
-# @app.route('/resume/<int:candidate_id>/view')
-# def view_resume(candidate_id):
-#     # Fetch the candidate's resume link from the database
-#     candidate = Resume.query.get(candidate_id)
-#     if not candidate or not candidate.resume_link:
-#         flash("Resume not found!", "danger")
-#         return redirect(url_for('dashboard'))
-    
-#     # Redirect to the resume link (e.g., Google Drive)
-#     return redirect(candidate.resume_link)
-
-# @app.route('/resume/<int:candidate_id>/download')
-# def download_resume(candidate_id):
-#     # Fetch the candidate's resume link from the database
-#     candidate = Resume.query.get(candidate_id)
-#     if not candidate or not candidate.resume_link:
-#         flash("Resume not found!", "danger")
-#         return redirect(url_for('dashboard'))
-    
-#     # Replace '/view' with '/uc' to enable downloading from Google Drive
-#     download_link = candidate.resume_link.replace('/view', '/uc')
-#     return redirect(download_link)
-
 # View specific Job posts details on landing page or home page
 @app.route('/job-details/<int:job_id>', methods=['GET'])
 def job_details(job_id):
@@ -307,6 +284,33 @@ def company_posts():
     jobs = JobPost.query.filter_by(company_id=session['company_id']).all()
 
     return render_template('company_jobPosts.html', company=company, jobs=jobs)
+
+# update the company job post
+@app.route('/update_job/<int:job_id>', methods=['GET', 'POST'])
+def update_job_post(job_id):
+    if 'company_id' not in session:
+        flash("Please log in first!", "danger")
+        return redirect(url_for('login'))
+
+    job = JobPost.query.get_or_404(job_id)
+
+    # Ensure the logged-in company owns this job
+    if job.company_id != session['company_id']:
+        flash("Unauthorized access!", "danger")
+        return redirect(url_for('company_posts'))
+
+    if request.method == 'POST':
+        job.job_title = request.form['job_title']
+        job.job_type = request.form['job_type']
+        job.experience_required = request.form['experience_required']
+        job.skills_required = request.form['skills_required']
+        job.status = request.form['status']
+
+        db.session.commit()
+        flash("Job post updated successfully!", "success")
+        return redirect(url_for('company_posts'))
+
+    return render_template('update_job.html', job=job)
 
 # View Job posts details
 @app.route('/post_details/<int:job_id>', methods=['GET'])

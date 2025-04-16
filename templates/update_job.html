@@ -1,0 +1,35 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}Update Job Post{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-primary mb-4">Update Job Post</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Job Title</label>
+            <input type="text" name="job_title" class="form-control" value="{{ job.job_title }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Job Type</label>
+            <input type="text" name="job_type" class="form-control" value="{{ job.job_type }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Experience Required</label>
+            <input type="text" name="experience_required" class="form-control" value="{{ job.experience_required }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Skills Required</label>
+            <input type="text" name="skills_required" class="form-control" value="{{ job.skills_required }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-control" required>
+                <option value="active" {% if job.status == 'active' %}selected{% endif %}>Active</option>
+                <option value="inactive" {% if job.status == 'in-active' %}selected{% endif %}>In-Active</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Job</button>
+    </form>
+</div>
+{% endblock %}
