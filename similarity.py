@@ -68,6 +68,9 @@ def calculate_similarity():
     # Scale to percentage range (0 to 100)
     df_combined['matching_score'] = (df_combined['matching_score'] * 10).round(2)
 
+    # Ensure the matching score is within the 0-100 range
+    df_combined['matching_score'] = df_combined['matching_score'].clip(0, 96)
+
     # Rank Resumes for Each Jobx
     df_combined['rank'] = df_combined.groupby('job_id')['matching_score'].rank(method='first', ascending=False).astype(int)
 
