@@ -109,7 +109,12 @@
                                             </div>
                                             <!-- Right Column (Texts) -->
                                             <div class="col-8">
-                                                {{ job.status }}
+                                                {% set status_text = job.status.value.strip() %}
+                                                {% if status_text == "Active" %}
+                                                    <span class="btn btn-outline-primary btn-sm" style="width: 100px;">{{ status_text }}</span>
+                                                {% else %}
+                                                    <span class="btn btn-outline-danger btn-sm" style="width: 100px;">{{ status_text }}</span>
+                                                {% endif %}
                                             </div>
                                         </div>
 
@@ -120,7 +125,7 @@
                                             </div>
                                             <!-- Right Column (Texts) -->
                                             <div class="col-8">
-                                                <a href="{{ url_for('view_applicants', job_id=job.job_id) }}" class="text-secondary">Click Here</a>
+                                                <a href="{{ url_for('view_applicants', job_id=job.job_id) }}" class="text-primary">Click Here</a>
                                             </div>
                                             <div class="d-flex justify-content-end">
                                                 <small class="text-primary">
