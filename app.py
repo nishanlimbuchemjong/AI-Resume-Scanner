@@ -52,7 +52,9 @@ def all_job_posts():
         ).order_by(JobPost.created_at.desc()).all()
     else:
         jobs = JobPost.query.order_by(JobPost.created_at.desc()).all()
-    return render_template('all_posts.html', jobs=jobs)
+
+    current_time = datetime.now().date()
+    return render_template('all_posts.html', jobs=jobs, current_time=current_time)
 
 @app.route('/about')
 def about():
