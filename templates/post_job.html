@@ -9,6 +9,10 @@
             <input type="text" class="form-control" name="job_title" required>
         </div>
         <div class="mb-3">
+            <label for="job_category">Job Category</label>
+            <input type="text" class="form-control" name="job_category" id="job_category" required>
+        </div> 
+        <div class="mb-3">
             <label class="form-label">Description</label>
             <textarea class="form-control" name="description" rows="3" required></textarea>
         </div>
@@ -33,6 +37,10 @@
                 <option value="Contract">Contract</option>
                 <option value="Remote">Remote</option>
             </select>
+        </div>
+        <div>
+            <label for="closing_date">Closing Date:</label>
+            <input type="date" class="form-control" id="closing_date" name="closing_date" required>
         </div>
         <button type="submit" class="btn btn-primary">Post Job</button>
     </form>

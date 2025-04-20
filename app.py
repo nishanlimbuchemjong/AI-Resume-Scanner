@@ -19,6 +19,7 @@ from flask import Response
 import re
 from io import BytesIO
 from flask import send_file
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -40,7 +41,7 @@ def landing_page():
 
 @app.route('/all-job-posts', methods=['GET'])
 def all_job_posts():
-    jobs = JobPost.query.all()
+    jobs = JobPost.query.order_by(JobPost.created_at.desc()).all()
     return render_template('all_posts.html', jobs=jobs)
 
 @app.route('/about')
@@ -284,7 +285,7 @@ def company_posts():
     
     company_id = session['company_id']
     company = Company.query.get(company_id)
-    jobs = JobPost.query.filter_by(company_id=session['company_id']).all()
+    jobs = JobPost.query.filter_by(company_id=session['company_id']).order_by(JobPost.created_at.desc()).all()
 
     return render_template('company_jobPosts.html', company=company, jobs=jobs)
 
@@ -336,20 +337,27 @@ def post_job():
     
     if request.method == 'POST':
         job_title = request.form['job_title']
+        job_category = request.form['job_category']
         description = request.form['description']
         skills_required = request.form['skills_required']
         experience_required = request.form['experience_required']
         education_required = request.form['education_required']
         job_type = request.form['job_type']
+        closing_date = request.form['closing_date']
         
+        if closing_date:
+            closing_date = datetime.strptime(closing_date, '%Y-%m-%d') 
+
         new_job = JobPost(
             company_id=session['company_id'],
             job_title=job_title,
+            job_category=job_category,
             description=description,
             skills_required=skills_required,
             experience_required=experience_required,
             education_required=education_required,
             job_type=job_type,
+            closing_date=closing_date,
             status=JobPostStatus.active
         )
         
