@@ -19,6 +19,22 @@
 
 <div class="container py-5">
     <h2 class="text-primary">Your All Job Posts</h2>
+    <!-- Search Form -->
+    <div class="d-flex justify-content-end mb-4">
+        <form method="get" action="{{ url_for('company_posts') }}">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control me-2 search-input" 
+                    placeholder="Search all your Job Post" 
+                    value="{{ request.args.get('search', '') }}"
+                    style="width: 400px;"
+                >
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
         {% if jobs %}
             <div class="row">
                 {% for job in jobs %}

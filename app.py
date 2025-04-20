@@ -287,7 +287,7 @@ def job_details(job_id):
 
 
 # Company Job post
-@app.route('/company_posts')
+@app.route('/company_posts', methods=['GET'])
 def company_posts():
     if 'company_id' not in session:
         flash("Please log in first!", "danger")
@@ -295,7 +295,16 @@ def company_posts():
     
     company_id = session['company_id']
     company = Company.query.get(company_id)
-    jobs = JobPost.query.filter_by(company_id=session['company_id']).order_by(JobPost.created_at.desc()).all()
+
+    query = request.args.get('search')
+    if query:
+        jobs = JobPost.query.join(Company).filter(
+            or_(
+                JobPost.job_title.ilike(f"%{query}%")
+            )
+        ).order_by(JobPost.created_at.desc()).all()
+    else:
+        jobs = JobPost.query.filter_by(company_id=session['company_id']).order_by(JobPost.created_at.desc()).all()
 
     return render_template('company_jobPosts.html', company=company, jobs=jobs)
 
