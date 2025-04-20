@@ -308,7 +308,8 @@ def company_posts():
     else:
         jobs = JobPost.query.filter_by(company_id=session['company_id']).order_by(JobPost.created_at.desc()).all()
 
-    return render_template('company_jobPosts.html', company=company, jobs=jobs)
+    current_time = datetime.now().date()
+    return render_template('company_jobPosts.html', company=company, jobs=jobs, current_time=current_time)
 
 # update the company job post
 @app.route('/update_job/<int:job_id>', methods=['GET', 'POST'])

@@ -126,10 +126,10 @@
                                             <!-- Right Column (Texts) -->
                                             <div class="col-8">
                                                 {% set status_text = job.status.value.strip() %}
-                                                {% if status_text == "Active" %}
-                                                    <span class="btn btn-outline-primary btn-sm" style="width: 100px;">{{ status_text }}</span>
+                                                {% if job.closing_date < current_time %}
+                                                    <span class="btn btn-outline-danger btn-sm" style="width: 100px;">In-active</span>
                                                 {% else %}
-                                                    <span class="btn btn-outline-danger btn-sm" style="width: 100px;">{{ status_text }}</span>
+                                                    <span class="btn btn-outline-primary btn-sm" style="width: 100px;">Active</span>
                                                 {% endif %}
                                             </div>
                                         </div>
