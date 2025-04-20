@@ -20,6 +20,7 @@ import re
 from io import BytesIO
 from flask import send_file
 from datetime import datetime
+from sqlalchemy import or_
 
 app = Flask(__name__)
 
@@ -41,7 +42,16 @@ def landing_page():
 
 @app.route('/all-job-posts', methods=['GET'])
 def all_job_posts():
-    jobs = JobPost.query.order_by(JobPost.created_at.desc()).all()
+    query = request.args.get('search')
+    if query:
+        jobs = JobPost.query.join(Company).filter(
+            or_(
+                JobPost.job_title.ilike(f"%{query}%"),
+                Company.company_name.ilike(f"%{query}%")
+            )
+        ).order_by(JobPost.created_at.desc()).all()
+    else:
+        jobs = JobPost.query.order_by(JobPost.created_at.desc()).all()
     return render_template('all_posts.html', jobs=jobs)
 
 @app.route('/about')

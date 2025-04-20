@@ -18,7 +18,23 @@
 </style>
 
 <div class="container py-5">
-    <h2 class="text-primary">Your All Job Posts</h2>
+    <h2 class="text-primary">Recent Job Posts</h2>
+    <!-- Search Form -->
+    <div class="d-flex justify-content-end mb-4">
+        <form method="get" action="{{ url_for('all_job_posts') }}">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control me-2 search-input" 
+                    placeholder="Search Job Post or Companies ................" 
+                    value="{{ request.args.get('search', '') }}"
+                    style="width: 400px;"
+                >
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
         {% if jobs %}
             <div class="row">
                 {% for job in jobs %}
@@ -115,7 +131,7 @@
                                                 {% else %}
                                                     <span class="btn btn-outline-danger btn-sm" style="width: 100px;">{{ status_text }}</span>
                                                 {% endif %}
-                                        </div>
+                                            </div>
                                         <div class="d-flex justify-content-end">
                                             <small class="text-primary">
                                                 <i class="fas fa-calendar"></i> Posted Date: {{ job.created_at.strftime('%b %d, %Y') }}
