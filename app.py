@@ -47,31 +47,8 @@ def media_files(filename):
 def landing_page():
     return render_template('landing_page.html',)
 
-# @app.route('/all-job-posts', methods=['GET'])
-# def all_job_posts():
-#     query = request.args.get('search')
-#     if query:
-#         jobs = JobPost.query.join(Company).filter(
-#             or_(
-#                 JobPost.job_title.ilike(f"%{query}%"),
-#                 Company.company_name.ilike(f"%{query}%")
-#             )
-#         ).order_by(JobPost.created_at.desc()).all()
-#     else:
-#         jobs = JobPost.query.order_by(JobPost.created_at.desc()).all()
-
-#     current_time = datetime.now().date()
-#     return render_template('all_posts.html', jobs=jobs, current_time=current_time)
 @app.route('/all-job-posts', methods=['GET'])
 def all_job_posts():
-    current_time = datetime.now().date()
-
-    # Automatically update expired jobs
-    expired_jobs = JobPost.query.filter(JobPost.deadline < current_time, JobPost.status == 'active').all()
-    for job in expired_jobs:
-        job.status = 'expired'
-    db.session.commit()
-
     query = request.args.get('search')
     if query:
         jobs = JobPost.query.join(Company).filter(
@@ -83,6 +60,7 @@ def all_job_posts():
     else:
         jobs = JobPost.query.order_by(JobPost.created_at.desc()).all()
 
+    current_time = datetime.now().date()
     return render_template('all_posts.html', jobs=jobs, current_time=current_time)
 
 @app.route('/about')
