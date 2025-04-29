@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 import psycopg2
 import os
 from config import Config
-from models import db, Company, JobPost, JobPostStatus, Resume, ResumeScore
+from models import Company, JobPost, JobPostStatus, Resume, ResumeScore
 from werkzeug.utils import secure_filename
 from drive_auth import upload_to_drive
 from pdf_extractor import extract_text_from_pdf, extract_skills, extract_experience, extract_education
@@ -21,24 +21,24 @@ from io import BytesIO
 from flask import send_file
 from datetime import datetime
 from sqlalchemy import or_
+from extensions import db
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-
+app.config.from_object(Config)
 # Get the DATABASE_URL from environment variables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
 # Disable track modifications to prevent overhead
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize SQLAlchemy
-db = SQLAlchemy(app)
+
 
 # # Initialize database
-# db.init_app(app)
+db.init_app(app)
 
 migrate = Migrate(app, db)
 
@@ -550,6 +550,5 @@ def calculate_scores():
     calculate_similarity()
     return jsonify({"message": "Matching scores calculated successfully!"})
 
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  
-    app.run(debug=True, host='0.0.0.0', port=port)
+if __name__ == "__main__":
+    app.run(debug=True)

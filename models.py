@@ -1,9 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Enum
 import enum
-
-# Initialize the database
-db = SQLAlchemy()
+from extensions import db
 
 # Enum for Job Post Status
 class JobPostStatus(enum.Enum):

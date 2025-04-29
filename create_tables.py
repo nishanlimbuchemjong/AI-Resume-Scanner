@@ -1,5 +1,6 @@
 from app import app
-from models import db
+from extensions import db
+from models import *
 
 with app.app_context():
     try:
