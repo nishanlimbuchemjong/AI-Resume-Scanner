@@ -45,9 +45,8 @@ Pipfile.lock
 *.swp
 *.swo
 
-# .env or config files
+# .env
 .env
-config.py
 
 # Docker files (if you're using Docker)
 .docker/
