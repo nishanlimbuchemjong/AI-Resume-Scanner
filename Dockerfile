@@ -1,18 +1,18 @@
-# Use official Python image
 FROM python:3.10-slim
 
-# Set working directory
+# Install system-level dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
+COPY . /app
 
-# Copy all project files
-COPY . .
-
-# Install Python dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose port (Flask default is 5000)
 EXPOSE 5000
 
-# Command to run the app
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
