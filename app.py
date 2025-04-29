@@ -22,20 +22,23 @@ from flask import send_file
 from datetime import datetime
 from sqlalchemy import or_
 
+# Load environment variables from .env file
+load_dotenv()
+
+# Initialize Flask app
 app = Flask(__name__)
 
-load_dotenv()  # Optional, for local testing
+# Get the DATABASE_URL from environment variables
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Disable track modifications to prevent overhead
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-conn = psycopg2.connect(DATABASE_URL)
-cursor = conn.cursor()
+# Initialize SQLAlchemy
+db = SQLAlchemy(app)
 
-# Load configuration from config.py file
-app.config.from_object(Config)
-
-# Initialize database
-db.init_app(app)
+# # Initialize database
+# db.init_app(app)
 
 migrate = Migrate(app, db)
 
