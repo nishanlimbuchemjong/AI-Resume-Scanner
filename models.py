@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Enum
+from sqlalchemy.types import Enum as SQLEnum
 import enum
 from extensions import db
 
@@ -39,7 +39,7 @@ class JobPost(db.Model):
     education_required = db.Column(db.String(255), nullable=False)
     job_type = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.TIMESTAMP, default=db.func.current_timestamp(), nullable=False)
-    status = db.Column(Enum(JobPostStatus), default=JobPostStatus.active, nullable=False)
+    status = db.Column(SQLEnum(JobPostStatus, name="job_post_status_enum"), default=JobPostStatus.active, nullable=False)
     views = db.Column(db.Integer, default=0)
     vacancy = db.Column(db.Integer, default=1)
     job_category = db.Column(db.String(100), nullable=True)
