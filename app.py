@@ -24,6 +24,13 @@ from sqlalchemy import or_
 
 app = Flask(__name__)
 
+load_dotenv()  # Optional, for local testing
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+conn = psycopg2.connect(DATABASE_URL)
+cursor = conn.cursor()
+
 # Load configuration from config.py file
 app.config.from_object(Config)
 
