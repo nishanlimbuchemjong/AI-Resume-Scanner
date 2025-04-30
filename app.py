@@ -33,7 +33,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.secret_key = os.getenv("SECRET_KEY")
 app.config.from_object(Config)
 
-
+print("Database URI:", app.config['SQLALCHEMY_DATABASE_URI'])
 # # Initialize database
 db.init_app(app)
 
@@ -435,7 +435,7 @@ def view_applicants(job_id):
             "rank": row[4],
             "resume_link": row[5],
             "score_label": (
-                            "Excellent" if row[3] >= 85 else
+                            "Excellent" if row[3] >= 80 else
                             "Good" if row[3] >= 70 else
                             "Average" if row[3] >= 50 else
                             "Poor"
