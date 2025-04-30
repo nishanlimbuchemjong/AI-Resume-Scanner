@@ -477,6 +477,8 @@ app.config['UPLOAD_FOLDER_RESUME'] = UPLOAD_FOLDER_RESUME
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_RESUME
 
+from flask import jsonify
+
 @app.route('/apply/<int:job_id>', methods=['GET', 'POST'])
 def apply_for_job(job_id):
     job = JobPost.query.get(job_id)
@@ -485,62 +487,65 @@ def apply_for_job(job_id):
         return redirect(url_for('all_job_posts'))
 
     if request.method == 'POST':
-        if 'resume' not in request.files:
-            flash('No file part', 'danger')
+        try:
+            if 'resume' not in request.files:
+                flash('No file part', 'danger')
+                return redirect(request.url)
+
+            resume = request.files['resume']
+            applicant_name = request.form['applicant_name']
+            email = request.form['email']
+
+            if resume.filename == '':
+                flash('No selected file', 'danger')
+                return redirect(request.url)
+
+            if resume and allowed_file(resume.filename):
+                filename = secure_filename(resume.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER_RESUME'], filename)
+
+                if not os.path.exists(app.config['UPLOAD_FOLDER_RESUME']):
+                    os.makedirs(app.config['UPLOAD_FOLDER_RESUME'])
+
+                resume.save(file_path)
+
+                # Upload to Google Drive
+                drive_link = upload_to_drive(file_path, filename)
+
+                # Resume parsing
+                extracted_text = extract_text_from_pdf(file_path)
+                skills = extract_skills(extracted_text)
+                experience = extract_experience(extracted_text)
+                education = extract_education(extracted_text)
+
+                new_resume = Resume(
+                    job_id=job_id,
+                    applicant_name=applicant_name,
+                    email=email,
+                    resume_file=drive_link,
+                    extracted_text=extracted_text,
+                    skills_extracted=skills,
+                    experience=experience,
+                    education=education
+                )
+
+                db.session.add(new_resume)
+                db.session.commit()
+
+                calculate_similarity()
+
+                flash('Resume submitted and extracted successfully! Scores updated.', 'success')
+                return redirect(url_for('all_job_posts'))
+
+            flash('Invalid file format. Only PDFs are allowed.', 'danger')
             return redirect(request.url)
 
-        resume = request.files['resume']
-        applicant_name = request.form['applicant_name']
-        email = request.form['email']
-
-        if resume.filename == '':
-            flash('No selected file', 'danger')
-            return redirect(request.url)
-
-        if resume and allowed_file(resume.filename):
-            filename = secure_filename(resume.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER_RESUME'], filename)
-
-            # Ensure upload folder exists
-            if not os.path.exists(app.config['UPLOAD_FOLDER_RESUME']):
-                os.makedirs(app.config['UPLOAD_FOLDER_RESUME'])
-
-            resume.save(file_path)
-
-            # Upload to Google Drive and get the link
-            drive_link = upload_to_drive(file_path, filename)
-
-            # Extract text and structured details from the resume
-            extracted_text = extract_text_from_pdf(file_path)
-            skills = extract_skills(extracted_text)
-            experience = extract_experience(extracted_text)
-            education = extract_education(extracted_text)
-
-            # Save extracted details in the database
-            new_resume = Resume(
-                job_id=job_id,
-                applicant_name=applicant_name,
-                email=email,
-                resume_file=drive_link,
-                extracted_text=extracted_text,
-                skills_extracted=skills,
-                experience=experience,
-                education=education
-            )
-
-            db.session.add(new_resume)
-            db.session.commit()
-
-            # **Call calculate_similarity() to update rankings**
-            calculate_similarity()
-
-            flash('Resume submitted and extracted successfully! Scores updated.', 'success')
-            return redirect(url_for('all_job_posts'))
-
-        flash('Invalid file format. Only PDFs are allowed.', 'danger')
-        return redirect(request.url)
+        except Exception as e:
+            print(f"Error occurred: {e}")  # You can also use `logging.error(...)`
+            return "Internal Server Error: " + str(e), 500
 
     return render_template('apply_for_job.html', job=job)
+
 
 @app.route('/calculate_scores', methods=['GET'])
 def calculate_scores():
