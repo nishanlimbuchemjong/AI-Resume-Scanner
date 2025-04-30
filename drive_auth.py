@@ -41,18 +41,49 @@ load_dotenv()
 # Get the path to your Google Service Account JSON from the environment
 SERVICE_ACCOUNT_FILE = os.getenv('GOOGLE_SERVICE_ACCOUNT_PATH')
 
+# Get the OAuth2 credentials file for user authentication
+OAUTH2_CREDENTIALS_FILE = os.getenv('GOOGLE_OAUTH2_CREDENTIALS_PATH')
+
 # Define the scope for Google Drive API
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
 def authenticate_drive():
-    # Use the service account credentials from the .env file
-    credentials = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    """Authenticate using either service account or OAuth2."""
+    creds = None
 
-    # Build the Google Drive API service
-    service = build('drive', 'v3', credentials=credentials)
-    return service
+    # Check if using Service Account or OAuth2
+    if SERVICE_ACCOUNT_FILE:
+        # Use the service account credentials from the .env file
+        credentials = service_account.Credentials.from_service_account_file(
+            SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+        # Build the Google Drive API service
+        service = build('drive', 'v3', credentials=credentials)
+        return service
 
+    elif OAUTH2_CREDENTIALS_FILE:
+        # OAuth2 flow for user authentication
+        if os.path.exists('token.json'):
+            creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+
+        # If no valid credentials, prompt for new authorization
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    OAUTH2_CREDENTIALS_FILE, SCOPES)
+                creds = flow.run_local_server(port=8082)
+
+            # Save credentials for the next run
+            with open('token.json', 'w') as token:
+                token.write(creds.to_json())
+
+        # Build the Google Drive API service
+        service = build('drive', 'v3', credentials=creds)
+        return service
+
+    else:
+        raise FileNotFoundError("Both Service Account and OAuth2 credentials are missing.")
 
 def upload_to_drive(file_path, file_name):
     """Uploads a file to the 'Job Resume' folder in Google Drive and returns the file link."""
