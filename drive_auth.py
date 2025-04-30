@@ -6,7 +6,7 @@ from googleapiclient.http import MediaFileUpload
 from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 from dotenv import load_dotenv
-
+import json
 # # Define the scope for Google Drive API
 # SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
@@ -35,24 +35,24 @@ from dotenv import load_dotenv
 # # Call the function to authenticate and create the drive service
 # # authenticate_drive()
 
-# Load environment variables from .env file
+# Load environment variables from .env file (if not already done)
+from dotenv import load_dotenv
 load_dotenv()
 
-# Get the path to your Google Service Account JSON from the environment
-SERVICE_ACCOUNT_FILE = os.getenv('GOOGLE_SERVICE_ACCOUNT_PATH')
+# Fetch the credentials JSON string from the environment
+service_account_info = json.loads(os.getenv('GOOGLE_SERVICE_ACCOUNT_JSON'))
 
 # Define the scope for Google Drive API
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
 def authenticate_drive():
-    # Use the service account credentials from the .env file
-    credentials = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    # Create credentials from the service account info
+    credentials = service_account.Credentials.from_service_account_info(
+        service_account_info, scopes=SCOPES)
 
     # Build the Google Drive API service
     service = build('drive', 'v3', credentials=credentials)
     return service
-
 
 def upload_to_drive(file_path, file_name):
     """Uploads a file to the 'Job Resume' folder in Google Drive and returns the file link."""
