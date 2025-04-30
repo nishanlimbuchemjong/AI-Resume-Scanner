@@ -48,6 +48,8 @@ Pipfile.lock
 # .env
 .env
 
+#hireintel-ai-16475f4dbe62.json file which have a google service account credentials
+hireintel-ai-16475f4dbe62.json
 # Docker files (if you're using Docker)
 .docker/
 docker-compose.yml
