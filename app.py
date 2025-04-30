@@ -23,6 +23,11 @@ from datetime import datetime
 from sqlalchemy import or_
 from extensions import db
 
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
 # Load environment variables from .env file
 load_dotenv()
 
