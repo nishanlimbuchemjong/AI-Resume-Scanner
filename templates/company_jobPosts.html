@@ -114,7 +114,11 @@
                                             </div>
                                             <!-- Right Column (Texts) -->
                                             <div class="col-8">
-                                                {{ job.skills_required }}
+                                                {% set skills = job.skills_required.split(',') %}
+                                                {{ skills[:3] | join(', ') }}
+                                                {% if skills|length > 3 %}
+                                                    <span class="text-muted">...and more</span>
+                                                {% endif %} 
                                             </div>
                                         </div>
 
