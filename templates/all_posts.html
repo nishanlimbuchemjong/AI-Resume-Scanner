@@ -43,7 +43,7 @@
                             <div class="row g-0">
                                 <!-- Left Side: Logo & Button -->
                                 <div class="col-md-3 d-flex flex-column align-items-center justify-content-center p-3">
-                                    <img src="{{ url_for('media_files', filename='uploads/logos/' + job.company.company_logo) }}" alt="Company Logo" class="img-fluid" style="max-width: 200px; width:100%">
+                                    <img src="{{ url_for('media_files', filename='uploads/logos/' + job.company.company_logo) }}" alt="Company Logo" class="img-fluid" style="max-width: 267px;height: 274px;object-fit: cover;">
                                     <div class="d-flex gap-2 mt-3">
                                         <a href="{{ url_for('job_details', job_id=job.job_id) }}" class="btn btn-outline-primary">View Details</a>
                                         <a href="{{ url_for('apply_for_job', job_id=job.job_id) }}" class="btn btn-primary">Apply Now</a>
