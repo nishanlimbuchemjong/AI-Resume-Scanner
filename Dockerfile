@@ -1,6 +1,5 @@
 FROM python:3.10-slim
 
-# Install system-level dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -12,6 +11,9 @@ COPY . /app
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+
+# ownload NLTK data
+RUN python -m nltk.downloader punkt stopwords wordnet
 
 EXPOSE 5000
 
