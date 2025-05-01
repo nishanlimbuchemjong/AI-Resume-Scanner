@@ -23,8 +23,9 @@ from datetime import datetime
 from sqlalchemy import or_
 from extensions import db
 from sqlalchemy import func, desc
-
+from collections import Counter
 import nltk
+
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -76,7 +77,19 @@ def all_job_posts():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    # Get all job categories
+    job_posts = JobPost.query.all()
+    categories = [job.job_category for job in job_posts]
+    print(job_posts)
+    print(categories)
+    # Count each category
+    category_counts = Counter(categories)
+    print(category_counts)
+    # Prepare data for the chart
+    labels = list(category_counts.keys())
+    values = list(category_counts.values())
+
+    return render_template('about.html', labels=labels, values=values)
 
 # Loaded environment variables
 load_dotenv()
