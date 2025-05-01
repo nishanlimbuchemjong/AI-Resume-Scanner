@@ -22,6 +22,7 @@ from flask import send_file
 from datetime import datetime
 from sqlalchemy import or_
 from extensions import db
+from sqlalchemy import func, desc
 
 import nltk
 nltk.download('punkt')
@@ -160,7 +161,7 @@ def signup():
             logo_filename = unique_filename
         else:
             # print(f"Else: Company logo: {company_logo}")  # Debug line
-            logo_filename = 'media/uploads/logos/logo.png'
+            logo_filename = 'media/uploads/logos/company_default_img.png'
 
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         
@@ -303,6 +304,33 @@ def job_details(job_id):
     db.session.commit() 
 
     return render_template('view_job_details.html', jobs=jobs)
+
+# display all companies on the landing page
+@app.route('/companies')
+def list_companies():
+    search_query = request.args.get('search', '')
+    page = request.args.get('page', 1, type=int)
+    per_page = 6
+
+    query = db.session.query(
+        Company,
+        func.count(JobPost.job_id).label('job_count')
+    ).outerjoin(JobPost, Company.company_id == JobPost.company_id) \
+    .group_by(Company.company_id) \
+    .order_by(desc('job_count'))
+
+    if search_query:
+        query = query.filter(Company.company_name.ilike(f'%{search_query}%'))
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    companies = pagination.items
+
+    return render_template(
+        'companies.html',
+        companies=companies,
+        pagination=pagination,
+        query=search_query
+    )
 
 @app.route('/company_posts', methods=['GET'])
 def company_posts():

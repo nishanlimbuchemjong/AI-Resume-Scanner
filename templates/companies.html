@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}HireIntel AI - Companies{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-primary">Companies & Job Posts</h2>
+
+    <!-- Search Form -->
+    <div class="d-flex justify-content-end mb-4">
+        <form method="get" action="{{ url_for('list_companies') }}">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control me-2 search-input" 
+                    placeholder="Search Company Name" 
+                    value="{{ query }}"
+                    style="width: 400px;"
+                >
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Companies List -->
+    <div class="row">
+        {% for company, job_count in companies %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if company.company_logo %}
+                        <img src="{{ company.company_logo }}" class="card-img-top" alt="{{ company.company_name }}" style="max-width: 354px;height: 274px;object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body" style="text-align: center;">
+                        <h4 class="card-title text-primary text-center">{{ company.company_name }}</h4>
+                        <h6 class="card-title text-center">{{ company.location }}</h6>
+                        <p>Total Job Posts: <strong class="text-primary">{{ job_count }}</strong></p>
+                        <a href="#" class="btn btn-primary">View Jobs</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('list_companies', page=pagination.prev_num, search=query) }}">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                {% endif %}
+
+                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        {% if page_num == pagination.page %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="{{ url_for('list_companies', page=page_num, search=query) }}">{{ page_num }}</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('list_companies', page=pagination.next_num, search=query) }}">Next</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
