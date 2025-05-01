@@ -55,18 +55,23 @@ def landing_page():
 @app.route('/all-job-posts', methods=['GET'])
 def all_job_posts():
     query = request.args.get('search')
+    page = request.args.get('page', 1, type=int)
+    per_page = 5  # Number of jobs per page
+
     if query:
-        jobs = JobPost.query.join(Company).filter(
+        jobs_query = JobPost.query.join(Company).filter(
             or_(
                 JobPost.job_title.ilike(f"%{query}%"),
                 Company.company_name.ilike(f"%{query}%")
             )
-        ).order_by(JobPost.created_at.desc()).all()
+        ).order_by(JobPost.created_at.desc())
     else:
-        jobs = JobPost.query.order_by(JobPost.created_at.desc()).all()
+        jobs_query = JobPost.query.order_by(JobPost.created_at.desc())
 
+    jobs = jobs_query.paginate(page=page, per_page=per_page)
     current_time = datetime.now().date()
-    return render_template('all_posts.html', jobs=jobs, current_time=current_time)
+
+    return render_template('all_posts.html', jobs=jobs, current_time=current_time, query=query)
 
 @app.route('/about')
 def about():
@@ -299,8 +304,6 @@ def job_details(job_id):
 
     return render_template('view_job_details.html', jobs=jobs)
 
-
-# Company Job post
 @app.route('/company_posts', methods=['GET'])
 def company_posts():
     if 'company_id' not in session:
@@ -311,14 +314,16 @@ def company_posts():
     company = Company.query.get(company_id)
 
     query = request.args.get('search')
+    page = request.args.get('page', 1, type=int)
+    per_page = 5  # You can change this based on your preference
+
     if query:
         jobs = JobPost.query.join(Company).filter(
-            or_(
-                JobPost.job_title.ilike(f"%{query}%")
-            )
-        ).order_by(JobPost.created_at.desc()).all()
+            JobPost.company_id == company_id,
+            JobPost.job_title.ilike(f"%{query}%")
+        ).order_by(JobPost.created_at.desc()).paginate(page=page, per_page=per_page)
     else:
-        jobs = JobPost.query.filter_by(company_id=session['company_id']).order_by(JobPost.created_at.desc()).all()
+        jobs = JobPost.query.filter_by(company_id=company_id).order_by(JobPost.created_at.desc()).paginate(page=page, per_page=per_page)
 
     current_time = datetime.now().date()
     return render_template('company_jobPosts.html', company=company, jobs=jobs, current_time=current_time)

@@ -37,7 +37,7 @@
     </div>
         {% if jobs %}
             <div class="row">
-                {% for job in jobs %}
+                {% for job in jobs.items %}
                     <div class="container py-2">
                         <section class="features bg-light">
                             <div class="row g-0">
@@ -115,10 +115,10 @@
                                             <!-- Right Column (Texts) -->
                                             <div class="col-8">
                                                 {% set skills = job.skills_required.split(',') %}
-        {{ skills[:3] | join(', ') }}
-        {% if skills|length > 3 %}
-            <span class="text-muted">...and more</span>
-        {% endif %}
+                                                {{ skills[:3] | join(', ') }}
+                                                {% if skills|length > 3 %}
+                                                    <span class="text-muted">...and more</span>
+                                                {% endif %} 
                                             </div>
                                         </div> 
 
@@ -155,4 +155,43 @@
             <p>No jobs posted yet.</p>
         {% endif %}
 </div>
+<!-- Pagination Controls -->
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+            {% if jobs.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('all_job_posts', page=jobs.prev_num, search=query) }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+
+            {% for page_num in jobs.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                {% if page_num %}
+                    {% if page_num == jobs.page %}
+                        <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('all_job_posts', page=page_num, search=query) }}">{{ page_num }}</a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if jobs.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('all_job_posts', page=jobs.next_num, search=query) }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
 {% endblock %}
