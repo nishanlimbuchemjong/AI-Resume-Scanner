@@ -35,7 +35,7 @@
                         <h4 class="card-title text-primary text-center">{{ company.company_name }}</h4>
                         <h6 class="card-title text-center">{{ company.location }}</h6>
                         <p>Total Job Posts: <strong class="text-primary">{{ job_count }}</strong></p>
-                        <a href="#" class="btn btn-primary">View Jobs</a>
+                        <a href="{{ url_for('company_details', company_id=company.company_id) }}" class="btn btn-primary">View Jobs</a>
                     </div>
                 </div>
             </div>

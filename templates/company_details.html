@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ company.company_name }} - Job Posts{% endblock %}
+
+{% block content %}
+<style>
+    .parallelogram {
+        background-color: #0d6efd;
+        color: white;
+        padding: 10px 20px;
+        transform: skew(-20deg);
+        display: inline-block;
+    }
+    .parallelogram-content {
+        transform: skew(20deg);
+    }
+</style>
+
+<div class="container py-5">
+    <h2 class="text-primary">All <strong>{{ company.company_name }}</strong>'s Job Posts</h2><a href="{{ url_for('list_companies') }}" class="btn btn-outline-primary mb-4">Back to All Companies</a>
+
+    {% if jobs %}
+        <div class="row">
+            {% for job in jobs.items %}
+                <div class="container py-2">
+                    <section class="features bg-light">
+                        <div class="row g-0">
+                            <!-- Left Column -->
+                            <div class="col-md-3 d-flex flex-column align-items-center justify-content-center p-3">
+                                <img src="{{ job.company.company_logo }}" class="img-fluid" style="max-width: 267px;height: 274px;object-fit: cover;">
+                                <div class="d-flex gap-2 mt-3">
+                                    <a href="{{ url_for('job_details', job_id=job.job_id) }}" class="btn btn-outline-primary">View Details</a>
+                                    <a href="{{ url_for('apply_for_job', job_id=job.job_id) }}" class="btn btn-primary">Apply Now</a>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="col-md-9">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-end">
+                                        <div class="parallelogram">
+                                            <span class="parallelogram-content">
+                                                <i class="fas fa-eye"></i> Views: {{ job.views }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <h4 class="card-title text-primary mb-2">{{ job.job_title|upper }}</h4>
+                                    <br>
+
+                                    <!-- Job Detail Rows -->
+                                    <div class="row mb-2">
+                                        <div class="col-3"><strong class="text-primary">Company Name</strong></div>
+                                        <div class="col-8">{{ job.company.company_name }}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-3"><strong class="text-primary">Location</strong></div>
+                                        <div class="col-8">{{ job.company.location }}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-3"><strong class="text-primary">Job Type</strong></div>
+                                        <div class="col-8">{{ job.job_type }}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-3"><strong class="text-primary">Experience</strong></div>
+                                        <div class="col-8">{{ job.experience_required }}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-3"><strong class="text-primary">Key Skills</strong></div>
+                                        <div class="col-8">
+                                            {% set skills = job.skills_required.split(',') %}
+                                            {{ skills[:3] | join(', ') }}
+                                            {% if skills|length > 3 %}
+                                                <span class="text-muted">...and more</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-3"><strong class="text-primary">Status</strong></div>
+                                        <div class="col-8">
+                                            <div class="col-8">
+                                                {% set status_text = job.status.value.strip() %}
+                                                {% if job.closing_date < current_time %}
+                                                    <span class="btn btn-outline-danger btn-sm" style="width: 100px;">In-active</span>
+                                                {% else %}
+                                                    <span class="btn btn-outline-primary btn-sm" style="width: 100px;">Active</span>
+                                                {% endif %}
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <small class="text-primary">
+                                            <i class="fas fa-calendar"></i> Posted Date: {{ job.created_at.strftime('%b %d, %Y') }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <br>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No job posts available from this company.</p>
+    {% endif %}
+</div>
+
+<!-- Pagination Controls -->
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+            {% if jobs.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('company_details', company_id=company.company_id, page=jobs.prev_num) }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            {% for page_num in jobs.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                {% if page_num %}
+                    {% if page_num == jobs.page %}
+                        <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('company_details', company_id=company.company_id, page=page_num) }}">{{ page_num }}</a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if jobs.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('company_details', company_id=company.company_id, page=jobs.next_num) }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+{% endblock %}

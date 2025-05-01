@@ -332,6 +332,15 @@ def list_companies():
         query=search_query
     )
 
+# showing the companies all posts
+@app.route('/company/<int:company_id>')
+def company_details(company_id):
+    page = request.args.get('page', 1, type=int)
+    company = Company.query.get_or_404(company_id)
+    jobs = JobPost.query.filter_by(company_id=company_id).order_by(JobPost.created_at.desc()).paginate(page=page, per_page=5)
+    current_time = datetime.now().date()
+    return render_template('company_details.html', company=company, jobs=jobs, current_time=current_time)
+
 @app.route('/company_posts', methods=['GET'])
 def company_posts():
     if 'company_id' not in session:
